@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Dashboard - Schedule Sync</title>
-  <link rel="stylesheet" href="/css/admin.css">nk
+  <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
 
 <div class="container">
-
   
+  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Schedule Sync</h2>
-
     <ul>
       <li>Dashboard</li>
       <li>Calendar</li>
@@ -29,9 +28,9 @@
     </div>
   </div>
 
-  
-  
+  <!-- Main Content -->
   <div class="main">
+    <!-- Header -->
     <div class="header">
       <div class="datetime">
         <div><strong>Today</strong><br><%= new Date().toLocaleDateString() %></div>
@@ -42,12 +41,12 @@
         <img src="/uploads/<%= user.profilePic %>" alt="Admin Image">
         <span>Logged in as <%= user.name %> (<%= user.role %>)</span>
         <form action="/logout" method="POST" class="logout-form">
-          <button type="submit"> Logout</button>
+          <button type="submit">Logout</button>
         </form>
       </div>
-
     </div>
 
+    <!-- Timetable Section -->
     <div class="time-table-section">
       <div class="time-table-header">
         <form id="teacherForm" method="get" action="/admin">
@@ -89,6 +88,8 @@
                       <div><strong><%= entry.subject %></strong></div>
                       <div><%= entry.startTime %> - <%= entry.endTime %></div>
                       <div>Room: <%= entry.room %></div>
+                      <div>Status: <%= entry.status || 'Pending' %></div>
+
                       <form action="/assign-timetable/delete" method="POST" class="delete-form">
                         <input type="hidden" name="teacherId" value="<%= selectedTeacherId %>">
                         <input type="hidden" name="day" value="<%= day %>">
@@ -108,6 +109,13 @@
     </div>
   </div>
 </div>
-  <script src="/js/admin.js"></script>
+
+<script>
+  function goToAssignPage() {
+    const teacherId = document.getElementById('teacherSelect').value;
+    window.location.href = `/assign-timetable?teacherId=${teacherId}`;
+  }
+</script>
+
 </body>
 </html>

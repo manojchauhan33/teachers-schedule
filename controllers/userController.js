@@ -1,6 +1,7 @@
 const Timetable = require('../models/timetable');
 const User = require('../models/user');
 
+
 async function renderUserDashboard(req, res) {
   try {
     const userId = req.session.user.id;
@@ -22,6 +23,31 @@ async function renderUserDashboard(req, res) {
   }
 }
 
+
+
+async function updateLectureStatus(req, res) {
+  try {
+    const { timetableId, status } = req.body;
+
+    if (!timetableId || !status) {
+      return res.status(400).json({ success: false, message: 'Missing data' });
+    }
+
+    const updated = await Timetable.findByIdAndUpdate(timetableId, { status });
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Lecture not found' });
+    }
+
+    res.json({ success: true, message: 'Status updated successfully' });
+
+  } catch (error) {
+    console.error('Error updating lecture status:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
+
 function logoutUser(req, res) {
   req.session.destroy(err => {
     if (err) {
@@ -32,5 +58,6 @@ function logoutUser(req, res) {
   });
 }
 
+module.exports = {renderUserDashboard,updateLectureStatus,logoutUser};
 
-module.exports = {renderUserDashboard,logoutUser};
+

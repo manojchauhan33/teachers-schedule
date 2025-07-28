@@ -14,77 +14,105 @@
     window.onload = updateClock;
   </script>
 </head>
+<body>
 
-  <body>
-    
-    <div class="sidebar">
-      <h3>Schedule Sync</h3>
-      <a class="nav-link" href="userDashboard">Dashboard</a>
-      <a class="nav-link" href="/celender">Calendar</a>
-      <a class="nav-link" href="/leave">ApproveLeave</a>
-      <a class="nav-link" href="/inbox-msg">Inbox</a>
+  <div class="sidebar">
+    <h3>Schedule Sync</h3>
+    <a class="nav-link" href="/userDashboard/dashboard">Dashboard</a>
+    <a class="nav-link" href="/celender">Calendar</a>
+    <a class="nav-link" href="/leave">ApproveLeave</a>
+    <a class="nav-link" href="/inbox-msg">Inbox</a>
 
-      <div style="margin-top: 40px;">
-        <p style="font-weight: 600;">Current View</p>
-        <button class="btn-outline-primary active-view">Meeting</button>
-        <button class="btn-outline-primary">Scheduling</button>
-        <button class="btn-primary">Upcoming Event</button>
+    <div style="margin-top: 40px;">
+      <p style="font-weight: 600;">Current View</p>
+      <button class="btn-outline-primary active-view">Meeting</button>
+      <button class="btn-outline-primary">Scheduling</button>
+      <button class="btn-primary">Upcoming Event</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="topbar">
+      <div>
+        <p style="margin: 0; font-weight: 600;">Today</p>
+        <h6><%= new Date().toLocaleDateString() %></h6>
+        <p id="clock" style="color: #6610f2; font-weight: 600;"></p>
+      </div>
+      <div class="user-info">
+        <% let profile = user.profilePic ? '/uploads/' + user.profilePic : '/public/img/default.png'; %>
+        <img src="<%= profile %>" alt="Profile"/>
+        <strong><%= user.name %> (Teacher)</strong>
+        <form action="/logout" method="POST">
+          <button class="logout-btn">Logout</button>
+        </form>
       </div>
     </div>
 
-
-    
-    <div class="content">
-      <div class="topbar">
-        <div>
-          <p style="margin: 0; font-weight: 600;">Today</p>
-          <h6><%= new Date().toLocaleDateString() %></h6>
-          <p id="clock" style="color: #6610f2; font-weight: 600;"></p>
-        </div>
-        <div class="user-info">
-          <% let profile = user.profilePic ? '/uploads/' + user.profilePic : '/public/img/default.png'; %>
-          <img src="<%= profile %>" alt="Profile"/>
-          <strong><%= user.name %> (Teacher)</strong>
-          <form action="/logout" method="POST">
-            <button class="logout-btn">Logout</button>
-          </form>
-        </div>
-      </div>
-
-      
-      <div class="table-responsive">
-        <table>
-          <thead>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Days/Time</th>
+            <% for(let i = 1; i <= 8; i++) { %>
+              <th>Period <%= i %></th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; %>
+          <% days.forEach(day => { %>
             <tr>
-              <th>Days/Time</th>
-              <% for(let i = 1; i <= 8; i++) { %>
-                <th>Period <%= i %></th>
+              <th><%= day %></th>
+              <% for(let i = 1; i <= 8; i++) {
+                const lecture = timetable.find(t => t.day === day && t.lecture === `Period ${i}`);
+              %>
+                <td>
+                  <% if (lecture) { %>
+                    <div><strong><%= lecture.subject %></strong></div>
+                    <small><%= lecture.startTime %> - <%= lecture.endTime %></small><br/>
+                    <span>Room: <%= lecture.room %></span><br/>
+
+                    <select onchange="updateStatus('<%= lecture._id %>', this.value)">
+                      <option disabled>Status</option>
+                      <option value="Pending" <%= lecture.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                      <option value="Done" <%= lecture.status === 'Done' ? 'selected' : '' %>>Done</option>
+                      <option value="Left" <%= lecture.status === 'Left' ? 'selected' : '' %>>Left</option>
+                    </select>
+                  <% } else { %>
+                    --
+                  <% } %>
+                </td>
               <% } %>
             </tr>
-          </thead>
-          <tbody>
-            <% const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; %>
-            <% days.forEach(day => { %>
-              <tr>
-                <th><%= day %></th>
-                <% for(let i = 1; i <= 8; i++) {
-                  const lecture = timetable.find(t => t.day === day && t.lecture === `Period ${i}`);
-                %>
-                  <td>
-                    <% if (lecture) { %>
-                      <div><strong><%= lecture.subject %></strong></div>
-                      <small><%= lecture.startTime %> - <%= lecture.endTime %></small><br />
-                      <span>Room: <%= lecture.room %></span>
-                    <% } else { %>
-                      --
-                    <% } %>
-                  </td>
-                <% } %>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </div>
+          <% }); %>
+        </tbody>
+      </table>
     </div>
-  </body>
+  </div>
+
+  <script>
+    async function updateStatus(timetableId, status) {
+      try {
+        const response = await fetch('/user/update-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ timetableId, status })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          console.log('Status updated');
+        } else {
+          alert('Update failed: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error updating lecture status:', error);
+      }
+    }
+  </script>
+
+</body>
 </html>

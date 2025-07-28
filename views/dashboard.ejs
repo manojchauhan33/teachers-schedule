@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    window.onload = updateClock;
+  </script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <h2>Welcome, <%= user.name %></h2>
+      <p><%= new Date().toLocaleDateString() %></p>
+    </div>
+    <div style="text-align: right;">
+      <p id="clock" style="font-size: 20px;"></p>
+    </div>
+  </div>
+
+  <div class="counters">
+    <div class="counter-box">
+      <h3><%= totalLectures %></h3>
+      <p>Total Lectures</p>
+    </div>
+    <div class="counter-box">
+      <h3><%= totalDone %></h3>
+      <p>Total Done</p>
+    </div>
+    <div class="counter-box">
+      <h3><%= totalLeft %></h3>
+      <p>Total Left</p>
+    </div>
+  </div>
+
+</body>
+</html>

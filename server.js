@@ -68,7 +68,8 @@ app.use('/user', userRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
-app.use('/userDashboard', userDashboardRoutes)
+app.use('/userDashboard', userDashboardRoutes);
+
 
 
 

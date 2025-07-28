@@ -1,11 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Approve Leave & Adjustments</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      border-left: 4px solid #007bff;
+      padding-left: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    select, button {
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-right: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .delete-btn:hover {
+      background-color: #b02a37;
+    }
+
+    form {
+      display: inline;
+    }
+  </style>
 </head>
 <body>
-    upcoming
+
+  <h2>Leave Requests</h2>
+  <table>
+    <tr>
+      <th>Teacher</th><th>Date</th><th>Reason</th><th>Status</th><th>Actions</th>
+    </tr>
+    <% leaveRequests.forEach(l => { %>
+      <tr>
+        <td><%= l.teacher.name %></td>
+        <td><%= l.date.toDateString() %></td>
+        <td><%= l.reason %></td>
+        <td><%= l.status %></td>
+        <td>
+          
+          <form method="POST" action="/approveLeave/leave-status">
+            <input type="hidden" name="leaveId" value="<%= l._id %>">
+            <select name="status">
+              <option value="Pending" <%= l.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+              <option value="Approved">Approve</option>
+              <option value="Rejected">Reject</option>
+            </select>
+            <button type="submit">Update</button>
+          </form>
+
+          
+          <form method="POST" action="/approveLeave/delete-leave">
+            <input type="hidden" name="leaveId" value="<%= l._id %>">
+            <button class="delete-btn" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+
+  <h2>Adjustments</h2>
+  <table>
+    <tr>
+      <th>Teacher</th><th>Day</th><th>Period</th><th>Subject</th><th>Status</th><th>Actions</th>
+    </tr>
+    <% adjustments.forEach(adj => { %>
+      <tr>
+        <td><%= adj.teacher.name %></td>
+        <td><%= adj.day %></td>
+        <td><%= adj.lecture %></td>
+        <td><%= adj.subject %></td>
+        <td><%= adj.status %></td>
+        <td>
+          <% if (adj.status === 'Pending') { %>
+            <form method="POST" action="/approveLeave/adjustment-status">
+              <input type="hidden" name="adjustmentId" value="<%= adj._id %>">
+              <button type="submit">Mark Adjusted</button>
+            </form>
+          <% } else { %>
+            Adjusted
+          <% } %>
+
+          
+
+          <form method="POST" action="/approveLeave/delete-adjustment">
+            <input type="hidden" name="adjustmentId" value="<%= adj._id %>">
+            <button class="delete-btn" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+
 </body>
 </html>

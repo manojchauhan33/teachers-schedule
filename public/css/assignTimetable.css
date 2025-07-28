@@ -1,0 +1,75 @@
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #fff;
+      padding: 35px 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    h2 {
+      color: #8000ff;
+      font-size: 24px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 6px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    .time-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .time-row > div {
+      flex: 1;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background-color: #ddd;
+      color: #333;
+    }
+
+    .btn-save {
+      background-color: #8000ff;
+      color: white;
+    }

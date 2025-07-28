@@ -1,145 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Login</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+  </head>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #fdfcfb, #dbe9f4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+  <body>
 
-    .login-wrapper {
-      display: flex;
-      width: 900px;
-      height: 450px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      background-color: white;
-    }
+    <div class="login-wrapper">
+      <div class="left-panel">
+        <h1>Welcome Back</h1>
+        <p>Log in to access your schedule, leave requests, and more.</p>
+      </div>
 
-    .left-panel {
-      flex: 1;
-      background: linear-gradient(135deg, #a044ff, #6a3093);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-    }
+      <div class="right-panel">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Enter your email" required>
 
-    .left-panel h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter your password" required>
 
-    .left-panel p {
-      font-size: 16px;
-      text-align: center;
-    }
+          <button type="submit">Login</button>
+        </form>
 
-    .right-panel {
-      flex: 1;
-      padding: 50px 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .right-panel h2 {
-      text-align: center;
-      color: #111;
-      margin-bottom: 30px;
-      font-size: 26px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      margin-bottom: 5px;
-      color: #333;
-      font-weight: 500;
-    }
-
-    input {
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 12px;
-      background: #8e2de2;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: #6a15c7;
-    }
-
-    .signup-link {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    .signup-link a {
-      color: #8e2de2;
-      text-decoration: none;
-    }
-
-    .signup-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="login-wrapper">
-    <div class="left-panel">
-      <h1>Welcome Back</h1>
-      <p>Log in to access your schedule, leave requests, and more.</p>
-    </div>
-
-    <div class="right-panel">
-      <h2>Login</h2>
-      <form action="/login" method="POST">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Enter your email" required>
-
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Enter your password" required>
-
-        <button type="submit">Login</button>
-      </form>
-
-      <div class="signup-link">
-        I have no account? <a href="/signup">Signup</a>
+        <div class="signup-link">
+          I have no account? <a href="/signup">Signup</a>
+        </div>
+        
       </div>
     </div>
-  </div>
 
-</body>
+  </body>
+
 </html>

@@ -18,6 +18,8 @@ const userRoutes = require('./routes/userRoutes');
 const logoutRoutes = require('./routes/logoutRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
 const approveLeaveRoutes = require('./routes/approveLeave');
+const userDashboardRoutes = require('./routes/userDashboardRoutes')
+
 
 
 
@@ -66,6 +68,7 @@ app.use('/user', userRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
+app.use('/userDashboard', userDashboardRoutes)
 
 
 
@@ -75,5 +78,6 @@ app.use('/approveLeave', approveLeaveRoutes);
 app.listen(3000, () => {
   console.log('Server started on http://localhost:3000');
 });
+
 
 

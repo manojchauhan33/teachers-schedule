@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Schedule Sync</title>
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; }
+    .container { display: flex; height: 100vh; }
+
+    .sidebar {
+      width: 220px; background: #f0f0f0; padding: 20px; border-right: 1px solid #ddd;
+    }
+    .sidebar h2 { color: #b500b5; font-size: 24px; margin-bottom: 40px; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar ul li { margin: 15px 0; font-size: 16px; color: #333; }
+    .sidebar a {text-decoration: none; color: inherit;}
+
+    .current-view, .upcoming-event { margin-top: 30px; }
+    .current-view button, .upcoming-event button {
+      display: block; width: 100%; margin: 10px 0; padding: 10px;
+      border-radius: 10px; border: 1px solid #ccc; background-color: white;
+      cursor: pointer; font-size: 14px;
+    }
+    .upcoming-event button { background-color: #3b82f6; color: white; border: none; font-weight: bold; }
+
+    .main { flex: 1; padding: 20px; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .datetime {
+      text-align: right;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      border: 2px solid #a020f0;
+    }
+
+    .user-info span {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .logout-form {
+      margin-left: 15px;
+    }
+
+    .logout-form button {
+      background-color: #ef4444;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .time-table-section { margin-top: 40px; }
+
+    .time-table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .time-table-header h3 { text-align: center; flex: 1; }
+
+    .time-table-header select {
+      padding: 5px 10px;
+    }
+
+    .time-table-header .add-btn {
+      background-color: #a020f0;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%; margin-top: 20px; border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    td {
+      background-color: #fff;
+      position: relative;
+    }
+
+    .lecture-box {
+      position: relative;
+      padding-right: 25px;
+    }
+
+    .delete-btn {
+      display: none;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 22px;
+      height: 22px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+      padding: 0;
+    }
+
+    .lecture-box:hover .delete-btn {
+      display: block;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  
+  <div class="sidebar">
+    <h2>Schedule Sync</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Calendar</li>
+      <li><a href="/approveLeave">Approve Leave</a></li>
+      <li>Inbox</li>
+    </ul>
+    <div class="current-view">
+      <button>Meeting</button>
+      <button>Scheduling</button>
+    </div>
+    <div class="upcoming-event">
+      <button>Upcoming Event</button>
+    </div>
+  </div>
+
+  
+  
+  <div class="main">
+    <div class="header">
+      <div class="datetime">
+        <div><strong>Today</strong><br><%= new Date().toLocaleDateString() %></div>
+        <div style="color: #3b82f6;"><%= new Date().toLocaleTimeString() %></div>
+      </div>
+      <div class="user-info">
+        <img src="/uploads/<%= user.profilePic %>" alt="Admin Image">
+        <span>Logged in as <%= user.name %> (<%= user.role %>)</span>
+        <form action="/logout" method="POST" class="logout-form">
+          <button type="submit"> Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="time-table-section">
+      <div class="time-table-header">
+        <form id="teacherForm" method="get" action="/admin">
+          <select name="teacherId" id="teacherSelect" onchange="document.getElementById('teacherForm').submit()">
+            <% teachers.forEach(teacher => { %>
+              <option value="<%= teacher._id %>" <%= teacher._id.toString() === selectedTeacherId ? 'selected' : '' %>>
+                <%= teacher.name %> - <%= teacher.email %>
+              </option>
+            <% }) %>
+          </select>
+        </form>
+
+        <h3>Time Table</h3>
+
+        <button class="add-btn" onclick="goToAssignPage()">Add Time Table Details</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Days/Time</th>
+            <% for (let i = 1; i <= 8; i++) { %>
+              <th>Period <%= i %></th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; %>
+          <% days.forEach(day => { %>
+            <tr>
+              <td><strong><%= day %></strong></td>
+              <% for (let i = 1; i <= 8; i++) {
+                const lectureName = 'Period ' + i;
+                const entry = timetableData.find(item => item.day === day && item.lecture === lectureName);
+              %>
+                <td>
+                  <% if (entry) { %>
+                    <div class="lecture-box">
+                      <div><strong><%= entry.subject %></strong></div>
+                      <div><%= entry.startTime %> - <%= entry.endTime %></div>
+                      <div>Room: <%= entry.room %></div>
+                      <form action="/assign-timetable/delete" method="POST" class="delete-form">
+                        <input type="hidden" name="teacherId" value="<%= selectedTeacherId %>">
+                        <input type="hidden" name="day" value="<%= day %>">
+                        <input type="hidden" name="lecture" value="<%= lectureName %>">
+                        <button type="submit" class="delete-btn" title="Delete Lecture">×</button>
+                      </form>
+                    </div>
+                  <% } else { %>
+                    --
+                  <% } %>
+                </td>
+              <% } %>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goToAssignPage() {
+    const teacherId = document.getElementById('teacherSelect').value;
+    if (teacherId) {
+      window.location.href = `/assign-timetable?teacherId=${teacherId}`;
+    } else {
+      alert('Please select a teacher.');
+    }
+  }
+</script>
+
+</body>
+</html>

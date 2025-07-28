@@ -65,7 +65,7 @@ app.use('/assign-timetable', assignRoutes);
 app.use('/user', userRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/leave', leaveRoutes);
-app.use('/approveLeave', approveLeaveRoutes)
+app.use('/approveLeave', approveLeaveRoutes);
 
 
 
@@ -75,3 +75,6 @@ app.use('/approveLeave', approveLeaveRoutes)
 app.listen(3000, () => {
   console.log('Server started on http://localhost:3000');
 });
+
+
+//arnav sir 

@@ -10,6 +10,7 @@ const loginController = async (req, res) => {
       return res.send('Invalid email or password');
     }
 
+
     req.session.user = {
       id: user._id,
       name: user.name,
@@ -17,16 +18,20 @@ const loginController = async (req, res) => {
       profilePic: user.profilePic
     };
 
+
+
     if (user.role === 'admin') {
       return res.redirect('/admin');
     } else {
       return res.redirect('/user');
     }
 
+    
+
   } catch (err) {
     console.error('Login Error:', err);
-    res.status(500).send('Server error. Try again later.');
+    res.status(500).send('error');
   }
-};
+};  
 
 export default loginController;

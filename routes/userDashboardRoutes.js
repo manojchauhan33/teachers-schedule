@@ -7,4 +7,5 @@ const router = express.Router();
 router.get('/', roleCheck('user'), renderDashboardPage);
 router.get('/dashboard', roleCheck('user'), renderDashboardPage);
 
+
 export default router;

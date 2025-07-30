@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
   res.render('signup');
 });
 
+
 router.post('/', upload.single('profilePic'), signup);
 
 export default router;

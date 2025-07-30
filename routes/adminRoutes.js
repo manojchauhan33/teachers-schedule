@@ -1,6 +1,7 @@
 import express from 'express';
-import { renderAdminDashboard } from '../controllers/adminController.js';
 import roleCheck from '../middlewares/roleCheck.js';
+import { renderAdminDashboard } from '../controllers/adminController.js';
+
 
 const router = express.Router();
 

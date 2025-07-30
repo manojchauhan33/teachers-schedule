@@ -38,6 +38,7 @@ async function saveTimetable(req, res) {
   }
 }
 
+
 async function deleteLecture(req, res) {
   try {
     const { teacherId, day, lecture } = req.body;

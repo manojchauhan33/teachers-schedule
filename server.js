@@ -24,6 +24,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// console.log(__dirname);       //full path of current file 
+// console.log(__filename);      //folder path of current file 
 
 app.use(bodyParser.urlencoded({
   extended: true,
@@ -49,6 +51,7 @@ app.use(session({
 
 
 
+
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
@@ -70,5 +73,6 @@ app.use('/userDashboard', userDashboardRoutes);
 
 
 app.listen(3000, () => {
-  console.log('Server started on http://localhost:3000');
+  console.log('Server running');
 });
+

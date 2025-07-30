@@ -1,7 +1,8 @@
 import User from '../models/user.js';
 
 const signup = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;    //object distructing
+  console.log(req.body);
   const profilePic = req.file ? req.file.filename : null;
 
   try {
@@ -9,6 +10,7 @@ const signup = async (req, res) => {
     if (existUser) {
       return res.send('User already exists');
     }
+
 
     const newUser = new User({
       name,
@@ -18,13 +20,16 @@ const signup = async (req, res) => {
       profilePic
     });
 
+    // console.log(newUser);
+
+
     await newUser.save();
 
     res.redirect('/login');
 
   } catch (err) {
     console.error('Error:', err);
-    res.status(500).send('Something went wrong');
+    res.status(500).send('Something went wrong');     //status 500 means somthing went wrong in server
   }
 };
 

@@ -9,7 +9,8 @@
 
 <div class="container">
   
-  <!-- Sidebar -->
+  
+  
   <div class="sidebar">
     <h2>Schedule Sync</h2>
     <ul>
@@ -28,14 +29,15 @@
     </div>
   </div>
 
-  <!-- Main Content -->
+
+  
   <div class="main">
-    <!-- Header -->
     <div class="header">
       <div class="datetime">
         <div><strong>Today</strong><br><%= new Date().toLocaleDateString() %></div>
         <div style="color: #3b82f6;"><%= new Date().toLocaleTimeString() %></div>
       </div>
+
 
       <div class="user-info">
         <img src="/uploads/<%= user.profilePic %>" alt="Admin Image">
@@ -46,7 +48,8 @@
       </div>
     </div>
 
-    <!-- Timetable Section -->
+
+    
     <div class="time-table-section">
       <div class="time-table-header">
         <form id="teacherForm" method="get" action="/admin">
@@ -96,9 +99,10 @@
                         <input type="hidden" name="lecture" value="<%= lectureName %>">
                         <button type="submit" class="delete-btn" title="Delete Lecture">×</button>
                       </form>
+
                     </div>
                   <% } else { %>
-                    --
+                    
                   <% } %>
                 </td>
               <% } %>
@@ -110,12 +114,14 @@
   </div>
 </div>
 
-<script>
+<!-- <script>
   function goToAssignPage() {
     const teacherId = document.getElementById('teacherSelect').value;
     window.location.href = `/assign-timetable?teacherId=${teacherId}`;
   }
-</script>
+</script> -->
+
+<script src="/js/admin.js"></script>
 
 </body>
 </html>

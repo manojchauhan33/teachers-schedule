@@ -11,6 +11,7 @@ async function renderDashboardPage(req, res) {
     const totalDone = timetable.filter(t => t.status === 'Done').length;
     const totalLeft = timetable.filter(t => t.status === 'Left').length;
 
+
     res.render('dashboard', {
       user: {
         name: user.name
@@ -20,9 +21,10 @@ async function renderDashboardPage(req, res) {
       totalLeft
     });
 
+
+
   } catch (error) {
-    console.error('Error rendering dashboard:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error:', error);
   }
 }
 

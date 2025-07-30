@@ -8,6 +8,7 @@ async function renderUserDashboard(req, res) {
     const user = await User.findById(userId);
     const timetable = await Timetable.find({ teacher: userId });
 
+
     res.render('user', {
       user: {
         name: user.name,
@@ -16,11 +17,13 @@ async function renderUserDashboard(req, res) {
       timetable
     });
 
+
   } catch (error) {
     console.error('Error loading user dashboard:', error);
     res.status(500).send('Something went wrong');
   }
 }
+
 
 async function updateLectureStatus(req, res) {
   try {
@@ -44,6 +47,8 @@ async function updateLectureStatus(req, res) {
   }
 }
 
+
+
 function logoutUser(req, res) {
   req.session.destroy(err => {
     if (err) {
@@ -53,5 +58,7 @@ function logoutUser(req, res) {
     res.redirect('/login');
   });
 }
+
+
 
 export { renderUserDashboard, updateLectureStatus, logoutUser };

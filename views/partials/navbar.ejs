@@ -1,0 +1,14 @@
+<div class="header">
+  <div class="datetime">
+    <div><strong>Today</strong><br><%= new Date().toLocaleDateString() %></div>
+    <div style="color: #3b82f6;"><%= new Date().toLocaleTimeString() %></div>
+  </div>
+
+  <div class="user-info">
+    <img src="/uploads/<%= user.profilePic %>" alt="Admin Image">
+    <span>Logged in as <%= user.name %> (<%= user.role %>)</span>
+    <form action="/logout" method="POST" class="logout-form">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+</div>

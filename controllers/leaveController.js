@@ -5,16 +5,20 @@ const renderLeaveForm = async (req, res) => {
     const teacherId = req.session.user.id;
     const leaves = await Leave.find({ teacher: teacherId }).sort({ date: -1 });
 
+
     res.render('leave', {
       success: req.session.success,
       error: req.session.error,
       leaveHistory: leaves
     });
 
-    // Clear messages after rendering
+
+    
+    
     req.session.success = null;
     req.session.error = null;
 
+    
   } catch (error) {
     console.error('Error rendering leave page:', error);
     res.status(500).send('Server Error');

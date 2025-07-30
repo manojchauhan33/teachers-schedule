@@ -1,9 +1,10 @@
 import express from 'express';
+import roleCheck from '../middlewares/roleCheck.js';
 import {
   renderLeaveForm,
   submitLeaveForm
 } from '../controllers/leaveController.js';
-import roleCheck from '../middlewares/roleCheck.js';
+
 
 const router = express.Router();
 

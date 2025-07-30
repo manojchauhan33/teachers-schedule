@@ -1,13 +1,12 @@
 import express from 'express';
-import {
-  renderAssignTimetable,
-  saveTimetable,
-  deleteLecture
-} from '../controllers/assignController.js';
-
 import roleCheck from '../middlewares/roleCheck.js';
+import {renderAssignTimetable,saveTimetable,deleteLecture} from '../controllers/assignController.js';
+
+
 
 const router = express.Router();
+
+
 
 router.get('/', roleCheck('admin'), renderAssignTimetable);
 router.post('/', roleCheck('admin'), saveTimetable);

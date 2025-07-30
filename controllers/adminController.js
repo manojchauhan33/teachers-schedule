@@ -13,6 +13,7 @@ async function renderAdminDashboard(req, res) {
       timetableData = await Timetable.find({ teacher: selectedTeacherId });
     }
 
+
     res.render('admin', {
       user: req.session.user,
       teachers,
@@ -20,10 +21,12 @@ async function renderAdminDashboard(req, res) {
       selectedTeacherId
     });
 
+
   } catch (error) {
     console.error('Error rendering admin dashboard:', error);
     res.status(500).send('Internal Server Error');
   }
 }
+
 
 export { renderAdminDashboard };

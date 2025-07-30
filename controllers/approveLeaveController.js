@@ -2,6 +2,9 @@ import Leave from '../models/leave.js';
 import Adjustment from '../models/adjustment.js';
 import User from '../models/user.js';
 
+
+
+
 const renderApprovePage = async (req, res) => {
   try {
     const leaveRequests = await Leave.find().populate('teacher');
@@ -18,16 +21,8 @@ const renderApprovePage = async (req, res) => {
   }
 };
 
-const updateLeaveStatus = async (req, res) => {
-  try {
-    const { leaveId, status } = req.body;
-    await Leave.findByIdAndUpdate(leaveId, { status });
-    res.redirect('/approveLeave');
-  } catch (error) {
-    console.error('Error updating leave status:', error);
-    res.status(500).send('Error updating leave status');
-  }
-};
+
+
 
 const updateAdjustmentStatus = async (req, res) => {
   try {
@@ -40,14 +35,16 @@ const updateAdjustmentStatus = async (req, res) => {
   }
 };
 
+
+
 const deleteLeave = async (req, res) => {
   try {
     const { leaveId } = req.body;
 
-    // Delete all related adjustments
+    
     await Adjustment.deleteMany({ leaveId });
 
-    // Delete the leave request itself
+    
     await Leave.findByIdAndDelete(leaveId);
 
     res.redirect('/approveLeave');
@@ -56,6 +53,9 @@ const deleteLeave = async (req, res) => {
     res.status(500).send('Error deleting leave');
   }
 };
+
+
+
 
 const deleteAdjustment = async (req, res) => {
   try {
@@ -68,10 +68,4 @@ const deleteAdjustment = async (req, res) => {
   }
 };
 
-export {
-  renderApprovePage,
-  updateLeaveStatus,
-  updateAdjustmentStatus,
-  deleteLeave,
-  deleteAdjustment
-};
+export {renderApprovePage,updateAdjustmentStatus,deleteLeave,deleteAdjustment};

@@ -7,6 +7,7 @@
 </head>
 <body>
 
+
   <form class="card" action="/assign-timetable" method="POST">
     <h2>Add Time Table Details</h2>
 
@@ -14,10 +15,13 @@
 
     <label for="day">Day</label>
     <select name="day" id="day" required>
+
       <% ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].forEach(day => { %>
         <option value="<%= day %>"><%= day %></option>
       <% }) %>
+
     </select>
+
 
     <label for="lecture">Lecture Number</label>
     <select name="lecture" id="lecture" required>
@@ -26,6 +30,7 @@
       <% } %>
     </select>
 
+
     <label for="subject">Subject Name</label>
     <input type="text" id="subject" name="subject" required>
 
@@ -33,6 +38,7 @@
       '08:00', '08:45', '09:30', '10:15', '11:00', '11:45',
       '12:30', '01:15', '02:00', '02:45', '03:30', '04:15'
     ]; %>
+
 
     <div class="time-row">
       <div>
@@ -53,6 +59,7 @@
       </div>
     </div>
 
+
     <label for="room">Room Number</label>
     <input type="text" id="room" name="room" required>
 
@@ -62,5 +69,6 @@
     </div>
   </form>
 
+  
 </body>
 </html>

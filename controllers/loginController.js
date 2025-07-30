@@ -1,4 +1,4 @@
-const User = require('../models/user');
+import User from '../models/user.js';
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -7,7 +7,7 @@ const loginController = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user || user.password !== password) {
-      return res.send('invalid email or password');
+      return res.send('Invalid email or password');
     }
 
     req.session.user = {
@@ -23,12 +23,10 @@ const loginController = async (req, res) => {
       return res.redirect('/user');
     }
 
-    
   } catch (err) {
     console.error('Login Error:', err);
     res.status(500).send('Server error. Try again later.');
   }
 };
 
-
-module.exports = loginController;
+export default loginController;

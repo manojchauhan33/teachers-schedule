@@ -1,6 +1,5 @@
-const Timetable = require('../models/timetable');
-const User = require('../models/user');
-
+import Timetable from '../models/timetable.js';
+import User from '../models/user.js';
 
 async function renderUserDashboard(req, res) {
   try {
@@ -22,8 +21,6 @@ async function renderUserDashboard(req, res) {
     res.status(500).send('Something went wrong');
   }
 }
-
-
 
 async function updateLectureStatus(req, res) {
   try {
@@ -47,7 +44,6 @@ async function updateLectureStatus(req, res) {
   }
 }
 
-
 function logoutUser(req, res) {
   req.session.destroy(err => {
     if (err) {
@@ -58,6 +54,4 @@ function logoutUser(req, res) {
   });
 }
 
-module.exports = {renderUserDashboard,updateLectureStatus,logoutUser};
-
-
+export { renderUserDashboard, updateLectureStatus, logoutUser };

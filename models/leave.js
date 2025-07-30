@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const leaveSchema = new mongoose.Schema({
   teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -7,4 +7,6 @@ const leaveSchema = new mongoose.Schema({
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' }
 });
 
-module.exports = mongoose.model('Leave', leaveSchema);
+const Leave = mongoose.model('Leave', leaveSchema);
+
+export default Leave;

@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Add Timetable</title>
-
   <link rel="stylesheet" href="/css/assignTimetable.css">
 </head>
 <body>
@@ -30,14 +29,27 @@
     <label for="subject">Subject Name</label>
     <input type="text" id="subject" name="subject" required>
 
+    <% const timeSlots = [
+      '08:00', '08:45', '09:30', '10:15', '11:00', '11:45',
+      '12:30', '01:15', '02:00', '02:45', '03:30', '04:15'
+    ]; %>
+
     <div class="time-row">
       <div>
         <label for="startTime">Start Time</label>
-        <input type="time" id="startTime" name="startTime" required>
+        <select id="startTime" name="startTime" required>
+          <% timeSlots.forEach(time => { %>
+            <option value="<%= time %>"><%= time %></option>
+          <% }) %>
+        </select>
       </div>
       <div>
         <label for="endTime">End Time</label>
-        <input type="time" id="endTime" name="endTime" required>
+        <select id="endTime" name="endTime" required>
+          <% timeSlots.forEach(time => { %>
+            <option value="<%= time %>"><%= time %></option>
+          <% }) %>
+        </select>
       </div>
     </div>
 

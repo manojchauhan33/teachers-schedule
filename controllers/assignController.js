@@ -1,30 +1,25 @@
-const Timetable = require('../models/timetable');
-const User = require('../models/user');
-
-
+import Timetable from '../models/timetable.js';
+import User from '../models/user.js';
 
 async function renderAssignTimetable(req, res) {
   try {
     const teacherId = req.query.teacherId;
     const teacher = await User.findById(teacherId);
     res.render('assignTimetable', { teacher });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error('Error rendering assign timetable:', error);
     res.status(500).send('Error loading form');
   }
 }
 
-
-
 async function saveTimetable(req, res) {
   try {
     const { teacherId, day, lecture, subject, startTime, endTime, room } = req.body;
 
-    
+    // Remove existing lecture entry for the same teacher/day/period
     await Timetable.deleteOne({ teacher: teacherId, day, lecture });
 
-    
+    // Save new lecture entry
     const newEntry = new Timetable({
       teacher: teacherId,
       day,
@@ -37,15 +32,11 @@ async function saveTimetable(req, res) {
 
     await newEntry.save();
     res.redirect(`/admin?teacherId=${teacherId}`);
-
   } catch (error) {
     console.error('Error saving timetable:', error);
     res.status(500).send('Failed to save timetable');
-
   }
 }
-
-
 
 async function deleteLecture(req, res) {
   try {
@@ -60,8 +51,4 @@ async function deleteLecture(req, res) {
   }
 }
 
-
-
-
-module.exports = {renderAssignTimetable,saveTimetable,deleteLecture};
-
+export { renderAssignTimetable, saveTimetable, deleteLecture };

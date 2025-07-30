@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const adjustmentSchema = new mongoose.Schema({
   leaveId: { type: mongoose.Schema.Types.ObjectId, ref: 'Leave' },
@@ -12,4 +12,6 @@ const adjustmentSchema = new mongoose.Schema({
   status: { type: String, enum: ['Pending', 'Adjusted'], default: 'Pending' }
 });
 
-module.exports = mongoose.model('Adjustment', adjustmentSchema);
+const Adjustment = mongoose.model('Adjustment', adjustmentSchema);
+
+export default Adjustment;

@@ -1,10 +1,13 @@
-// routes/leaveRoutes.js
-const express = require('express');
+import express from 'express';
+import {
+  renderLeaveForm,
+  submitLeaveForm
+} from '../controllers/leaveController.js';
+import roleCheck from '../middlewares/roleCheck.js';
+
 const router = express.Router();
-const leaveController = require('../controllers/leaveController');
-const roleCheck = require('../middlewares/roleCheck');
 
-router.get('/', roleCheck('user'), leaveController.renderLeaveForm);
-router.post('/', roleCheck('user'), leaveController.submitLeaveForm);
+router.get('/', roleCheck('user'), renderLeaveForm);
+router.post('/', roleCheck('user'), submitLeaveForm);
 
-module.exports = router;
+export default router;

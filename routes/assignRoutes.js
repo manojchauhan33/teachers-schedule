@@ -1,13 +1,16 @@
-const express = require('express');
+import express from 'express';
+import {
+  renderAssignTimetable,
+  saveTimetable,
+  deleteLecture
+} from '../controllers/assignController.js';
+
+import roleCheck from '../middlewares/roleCheck.js';
+
 const router = express.Router();
-const assignController = require('../controllers/assignController');
 
-const roleCheck = require('../middlewares/roleCheck'); 
+router.get('/', roleCheck('admin'), renderAssignTimetable);
+router.post('/', roleCheck('admin'), saveTimetable);
+router.post('/delete', roleCheck('admin'), deleteLecture);
 
-
-
-router.get('/', roleCheck('admin'), assignController.renderAssignTimetable);
-router.post('/', roleCheck('admin'), assignController.saveTimetable);
-router.post('/delete', roleCheck('admin'), assignController.deleteLecture);
-
-module.exports = router;
+export default router;

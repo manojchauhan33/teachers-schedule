@@ -1,5 +1,5 @@
-const Timetable = require('../models/timetable');
-const User = require('../models/user');
+import Timetable from '../models/timetable.js';
+import User from '../models/user.js';
 
 async function renderDashboardPage(req, res) {
   try {
@@ -26,4 +26,4 @@ async function renderDashboardPage(req, res) {
   }
 }
 
-module.exports = {renderDashboardPage};
+export { renderDashboardPage };

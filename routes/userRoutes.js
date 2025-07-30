@@ -1,12 +1,13 @@
-const express = require('express');
+import express from 'express';
+import {
+  renderUserDashboard,
+  updateLectureStatus
+} from '../controllers/userController.js';
+import roleCheck from '../middlewares/roleCheck.js';
+
 const router = express.Router();
-const userController = require('../controllers/userController');
-const roleCheck = require('../middlewares/roleCheck'); 
 
+router.get('/', roleCheck('user'), renderUserDashboard);
+router.post('/update-status', roleCheck('user'), updateLectureStatus);
 
-router.get('/', roleCheck('user'), userController.renderUserDashboard);
-
-
-router.post('/update-status', roleCheck('user'), userController.updateLectureStatus);
-
-module.exports = router;
+export default router;

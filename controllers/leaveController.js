@@ -1,6 +1,6 @@
-const Leave = require('../models/leave');
+import Leave from '../models/leave.js';
 
-exports.renderLeaveForm = async (req, res) => {
+const renderLeaveForm = async (req, res) => {
   try {
     const teacherId = req.session.user.id;
     const leaves = await Leave.find({ teacher: teacherId }).sort({ date: -1 });
@@ -11,8 +11,7 @@ exports.renderLeaveForm = async (req, res) => {
       leaveHistory: leaves
     });
 
-    
-    
+    // Clear messages after rendering
     req.session.success = null;
     req.session.error = null;
 
@@ -22,7 +21,7 @@ exports.renderLeaveForm = async (req, res) => {
   }
 };
 
-exports.submitLeaveForm = async (req, res) => {
+const submitLeaveForm = async (req, res) => {
   try {
     const { date, reason } = req.body;
     const teacherId = req.session.user.id;
@@ -51,3 +50,5 @@ exports.submitLeaveForm = async (req, res) => {
     res.redirect('/leave');
   }
 };
+
+export { renderLeaveForm, submitLeaveForm };

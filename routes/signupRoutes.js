@@ -1,15 +1,13 @@
-const express = require('express');
+import express from 'express';
+import upload from '../middlewares/multerConfig.js';
+import { signup } from '../controllers/signupController.js';
+
 const router = express.Router();
-const upload = require('../middlewares/multerConfig');
-const signupController = require('../controllers/signupController');
-
-
 
 router.get('/', (req, res) => {
   res.render('signup');
 });
 
+router.post('/', upload.single('profilePic'), signup);
 
-router.post('/', upload.single('profilePic'), signupController.signup);
-
-module.exports = router;
+export default router;

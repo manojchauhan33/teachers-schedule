@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const timetableSchema = new mongoose.Schema({
   teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -11,4 +11,6 @@ const timetableSchema = new mongoose.Schema({
   status: { type: String, enum: ['Done', 'Left', 'Pending'], default: 'Pending' }
 });
 
-module.exports = mongoose.model('Timetable', timetableSchema);
+const Timetable = mongoose.model('Timetable', timetableSchema);
+
+export default Timetable;

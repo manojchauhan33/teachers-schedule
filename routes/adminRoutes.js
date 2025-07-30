@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { renderAdminDashboard } from '../controllers/adminController.js';
+import roleCheck from '../middlewares/roleCheck.js';
+
 const router = express.Router();
-const adminController = require('../controllers/adminController');
 
-const roleCheck = require('../middlewares/roleCheck'); 
+router.get('/', roleCheck('admin'), renderAdminDashboard);
 
-router.get('/', roleCheck('admin'), adminController.renderAdminDashboard);
-
-module.exports = router;
+export default router;

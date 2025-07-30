@@ -1,8 +1,6 @@
-const Leave = require('../models/leave');
-const Adjustment = require('../models/adjustment');
-const User = require('../models/user');
-
-
+import Leave from '../models/leave.js';
+import Adjustment from '../models/adjustment.js';
+import User from '../models/user.js';
 
 const renderApprovePage = async (req, res) => {
   try {
@@ -20,13 +18,10 @@ const renderApprovePage = async (req, res) => {
   }
 };
 
-
 const updateLeaveStatus = async (req, res) => {
   try {
     const { leaveId, status } = req.body;
-
     await Leave.findByIdAndUpdate(leaveId, { status });
-
     res.redirect('/approveLeave');
   } catch (error) {
     console.error('Error updating leave status:', error);
@@ -34,14 +29,10 @@ const updateLeaveStatus = async (req, res) => {
   }
 };
 
-
-
 const updateAdjustmentStatus = async (req, res) => {
   try {
     const { adjustmentId } = req.body;
-
     await Adjustment.findByIdAndUpdate(adjustmentId, { status: 'Adjusted' });
-
     res.redirect('/approveLeave');
   } catch (error) {
     console.error('Error updating adjustment:', error);
@@ -49,18 +40,14 @@ const updateAdjustmentStatus = async (req, res) => {
   }
 };
 
-
-
 const deleteLeave = async (req, res) => {
   try {
     const { leaveId } = req.body;
 
-    
-    
+    // Delete all related adjustments
     await Adjustment.deleteMany({ leaveId });
 
-    
-    
+    // Delete the leave request itself
     await Leave.findByIdAndDelete(leaveId);
 
     res.redirect('/approveLeave');
@@ -70,14 +57,10 @@ const deleteLeave = async (req, res) => {
   }
 };
 
-
-
 const deleteAdjustment = async (req, res) => {
   try {
     const { adjustmentId } = req.body;
-
     await Adjustment.findByIdAndDelete(adjustmentId);
-
     res.redirect('/approveLeave');
   } catch (error) {
     console.error('Error deleting adjustment:', error);
@@ -85,5 +68,10 @@ const deleteAdjustment = async (req, res) => {
   }
 };
 
-
-module.exports = {renderApprovePage,updateLeaveStatus,updateAdjustmentStatus,deleteLeave,deleteAdjustment};
+export {
+  renderApprovePage,
+  updateLeaveStatus,
+  updateAdjustmentStatus,
+  deleteLeave,
+  deleteAdjustment
+};

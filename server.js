@@ -1,27 +1,28 @@
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const path = require('path');
+import express from 'express';
+import session from 'express-session';
+import bodyParser from 'body-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+import './data_base_config/db.js';
 
+import signupRoutes from './routes/signupRoutes.js';
+import loginRoutes from './routes/loginRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import assignRoutes from './routes/assignRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import logoutRoutes from './routes/logoutRoutes.js';
+import leaveRoutes from './routes/leaveRoutes.js';
+import approveLeaveRoutes from './routes/approveLeave.js';
+import userDashboardRoutes from './routes/userDashboardRoutes.js';
 
 const app = express();
 
 
 
-require('./data_base_config/db');
-const signupRoutes = require('./routes/signupRoutes');
-const loginRoutes = require('./routes/loginRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const assignRoutes = require('./routes/assignRoutes');
-const userRoutes = require('./routes/userRoutes');
-const logoutRoutes = require('./routes/logoutRoutes');
-const leaveRoutes = require('./routes/leaveRoutes');
-const approveLeaveRoutes = require('./routes/approveLeave');
-const userDashboardRoutes = require('./routes/userDashboardRoutes')
-
-
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 app.use(bodyParser.urlencoded({
@@ -30,13 +31,11 @@ app.use(bodyParser.urlencoded({
   parameterLimit: 10000
 }));
 
-
-
-
 app.use(bodyParser.json());
+
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 
 
 app.use(session({
@@ -55,10 +54,7 @@ app.use('/uploads', express.static('uploads'));
 
 
 
-
 app.get('/', (req, res) => res.redirect('/signup'));
-
-
 
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
@@ -73,12 +69,6 @@ app.use('/userDashboard', userDashboardRoutes);
 
 
 
-
-
-
 app.listen(3000, () => {
   console.log('Server started on http://localhost:3000');
 });
-
-
-

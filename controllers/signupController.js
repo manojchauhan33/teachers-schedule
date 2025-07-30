@@ -1,20 +1,14 @@
-const User = require('../models/user');
-
+import User from '../models/user.js';
 
 const signup = async (req, res) => {
   const { name, email, password, role } = req.body;
   const profilePic = req.file ? req.file.filename : null;
 
-
-
   try {
-
     const existUser = await User.findOne({ email });
     if (existUser) {
-      return res.send('user already exists');
+      return res.send('User already exists');
     }
-
-
 
     const newUser = new User({
       name,
@@ -24,18 +18,14 @@ const signup = async (req, res) => {
       profilePic
     });
 
-
     await newUser.save();
 
     res.redirect('/login');
 
   } catch (err) {
-    console.error('error:', err);
-    res.status(500).send('Something went wrong');           //Internal Server Error ststus(500)
+    console.error('Error:', err);
+    res.status(500).send('Something went wrong');
   }
 };
 
-
-
-
-module.exports = { signup };
+export { signup };

@@ -1,6 +1,5 @@
-const User = require('../models/user');
-const Timetable = require('../models/timetable');
-
+import User from '../models/user.js';
+import Timetable from '../models/timetable.js';
 
 async function renderAdminDashboard(req, res) {
   try {
@@ -20,10 +19,11 @@ async function renderAdminDashboard(req, res) {
       timetableData,
       selectedTeacherId
     });
+
   } catch (error) {
     console.error('Error rendering admin dashboard:', error);
     res.status(500).send('Internal Server Error');
   }
 }
 
-module.exports = {renderAdminDashboard};
+export { renderAdminDashboard };

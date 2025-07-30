@@ -1,12 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { renderDashboardPage } from '../controllers/userDashboardController.js';
+import roleCheck from '../middlewares/roleCheck.js';
+
 const router = express.Router();
-const userDashboardController = require('../controllers/userDashboardController');
-const roleCheck = require('../middlewares/roleCheck');
 
+router.get('/', roleCheck('user'), renderDashboardPage);
+router.get('/dashboard', roleCheck('user'), renderDashboardPage);
 
-router.get('/', roleCheck('user'), userDashboardController.renderDashboardPage);
-
-
-router.get('/dashboard', roleCheck('user'), userDashboardController.renderDashboardPage);
-
-module.exports = router;
+export default router;

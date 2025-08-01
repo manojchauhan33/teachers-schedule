@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+
 import './data_base_config/db.js';
 
 import signupRoutes from './routes/signupRoutes.js';
@@ -14,18 +15,13 @@ import assignRoutes from './routes/assignRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import logoutRoutes from './routes/logoutRoutes.js';
 import leaveRoutes from './routes/leaveRoutes.js';
-import approveLeaveRoutes from './routes/approveLeave.js';
+import approveLeaveRoutes from './routes/approveLeaveRoutes.js';
 import userDashboardRoutes from './routes/userDashboardRoutes.js';
 
 const app = express();
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// console.log(__dirname);       //full path of current file 
-// console.log(__filename);      //folder path of current file 
 
 app.use(bodyParser.urlencoded({
   extended: true,
@@ -33,11 +29,13 @@ app.use(bodyParser.urlencoded({
   parameterLimit: 10000
 }));
 
-app.use(bodyParser.json());
 
+
+app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 
 
 app.use(session({
@@ -51,13 +49,13 @@ app.use(session({
 
 
 
-
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
 
 
-app.get('/', (req, res) => res.redirect('/signup'));
+app.get('/', (req, res) => res.redirect('/login'));
+
 
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
@@ -65,14 +63,12 @@ app.use('/admin', adminRoutes);
 app.use('/assign-timetable', assignRoutes);
 app.use('/user', userRoutes);
 app.use('/logout', logoutRoutes);
+app.use('/dashboard', userDashboardRoutes);
 app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
-app.use('/userDashboard', userDashboardRoutes);
-
 
 
 
 app.listen(3000, () => {
   console.log('Server running');
 });
-

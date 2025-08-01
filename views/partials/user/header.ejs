@@ -1,0 +1,15 @@
+<div class="topbar">
+  <div>
+    <p style="margin: 0; font-weight: 600;">Today</p>
+    <h6><%= new Date().toLocaleDateString() %></h6>
+    <p id="clock" style="color: #6610f2; font-weight: 600;"></p>
+  </div>
+  <div class="user-info">
+    <% let profile = user.profilePic ? '/uploads/' + user.profilePic : '/public/img/default.png'; %>
+    <img src="<%= profile %>" alt="Profile"/>
+    <strong><%= user.name %> (Teacher)</strong>
+    <form action="/logout" method="POST">
+      <button class="logout-btn">Logout</button>
+    </form>
+  </div>
+</div>

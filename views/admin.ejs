@@ -8,46 +8,15 @@
 <body>
 
 <div class="container">
-  
-  
-  
-  <div class="sidebar">
-    <h2>Schedule Sync</h2>
-    <ul>
-      <li>Dashboard</li>
-      <li>Calendar</li>
-      <li><a href="/approveLeave">Approve Leave</a></li>
-      <li>Inbox</li>
-    </ul>
 
-    <div class="current-view">
-      <button>Meeting</button>
-      <button>Scheduling</button>
-    </div>
-    <div class="upcoming-event">
-      <button>Upcoming Event</button>
-    </div>
-  </div>
-
+  
+  <%- include('partials/sidebar') %>
 
   
   <div class="main">
-    <div class="header">
-      <div class="datetime">
-        <div><strong>Today</strong><br><%= new Date().toLocaleDateString() %></div>
-        <div style="color: #3b82f6;"><%= new Date().toLocaleTimeString() %></div>
-      </div>
 
-
-      <div class="user-info">
-        <img src="/uploads/<%= user.profilePic %>" alt="Admin Image">
-        <span>Logged in as <%= user.name %> (<%= user.role %>)</span>
-        <form action="/logout" method="POST" class="logout-form">
-          <button type="submit">Logout</button>
-        </form>
-      </div>
-    </div>
-
+    
+    <%- include('partials/header') %>
 
     
     <div class="time-table-section">
@@ -55,9 +24,7 @@
         <form id="teacherForm" method="get" action="/admin">
           <select name="teacherId" id="teacherSelect" onchange="document.getElementById('teacherForm').submit()">
             <% teachers.forEach(teacher => { %>
-              <option value="<%= teacher._id %>" <%= teacher._id.toString() === selectedTeacherId ? 'selected' : '' %>>
-                <%= teacher.name %> - <%= teacher.email %>
-              </option>
+              <option value="<%= teacher._id %>" <%= teacher._id.toString() === selectedTeacherId ? 'selected' : '' %>><%= teacher.name %> - <%= teacher.email %></option>
             <% }) %>
           </select>
         </form>
@@ -99,10 +66,7 @@
                         <input type="hidden" name="lecture" value="<%= lectureName %>">
                         <button type="submit" class="delete-btn" title="Delete Lecture">×</button>
                       </form>
-
                     </div>
-                  <% } else { %>
-                    
                   <% } %>
                 </td>
               <% } %>
@@ -114,14 +78,12 @@
   </div>
 </div>
 
-<!-- <script>
+<script>
   function goToAssignPage() {
     const teacherId = document.getElementById('teacherSelect').value;
     window.location.href = `/assign-timetable?teacherId=${teacherId}`;
   }
-</script> -->
-
-<script src="/js/admin.js"></script>
+</script>
 
 </body>
 </html>

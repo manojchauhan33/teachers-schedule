@@ -17,6 +17,7 @@ const loginController = async (req, res) => {
       role: user.role,
       profilePic: user.profilePic
     };
+    
 
 
 

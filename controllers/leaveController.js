@@ -1,58 +1,56 @@
 import Leave from '../models/leave.js';
 
-const renderLeaveForm = async (req, res) => {
-  try {
-    const teacherId = req.session.user.id;
-    const leaves = await Leave.find({ teacher: teacherId }).sort({ date: -1 });
+export const renderLeaveForm = (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
 
-
-    res.render('leave', {
-      success: req.session.success,
-      error: req.session.error,
-      leaveHistory: leaves
-    });
-
-
-    
-    
-    req.session.success = null;
-    req.session.error = null;
-
-    
-  } catch (error) {
-    console.error('Error rendering leave page:', error);
-    res.status(500).send('Server Error');
-  }
+  res.render('leave', {
+    user: req.session.user,
+    successMessage: null,
+    errorMessage: null
+  });
 };
 
-const submitLeaveForm = async (req, res) => {
+export const submitLeave = async (req, res) => {
   try {
+    if (!req.session.user) return res.redirect('/login');
+
     const { date, reason } = req.body;
     const teacherId = req.session.user.id;
 
-    const existing = await Leave.findOne({ teacher: teacherId, date });
 
-    if (existing) {
-      req.session.error = 'You already applied leave for this date.';
-      return res.redirect('/leave');
+    console.log(req.body);
+    console.log("Submitting leave for teacher:", teacherId);
+
+
+    if (!date || !reason || !teacherId) {
+      return res.render('leave', {
+        user: req.session.user,
+        successMessage: null,
+        errorMessage: 'Please fill all fields.'
+      });
     }
 
     const leave = new Leave({
       teacher: teacherId,
       date,
       reason,
+      status: 'Pending'
     });
 
     await leave.save();
 
-    req.session.success = 'Leave applied successfully.';
-    res.redirect('/leave');
-
+    res.render('leave', {
+      user: req.session.user,
+      successMessage: 'Leave submitted successfully!',
+      errorMessage: null
+    });
   } catch (error) {
-    console.error('Error submitting leave form:', error);
-    req.session.error = 'Something went wrong.';
-    res.redirect('/leave');
+    console.error("Error submitting leave:", error);
+
+    res.status(500).render('leave', {
+      user: req.session.user || null,
+      successMessage: null,
+      errorMessage: 'Something went wrong while submitting leave.'
+    });
   }
 };
-
-export { renderLeaveForm, submitLeaveForm };

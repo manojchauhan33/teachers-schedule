@@ -1,37 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Apply Leave</title>
+  <title>Apply for Leave</title>
   <style>
-    
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f7f9fc;
-      margin: 0;
-      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+
+    .leave-container {
+      background: #fff;
+      padding: 25px 35px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
+      text-align: center;
       color: #333;
-      margin-bottom: 20px;
-      border-left: 4px solid #007bff;
-      padding-left: 10px;
-    }
-
-    form {
-      background-color: #fff;
-      padding: 25px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: auto;
     }
 
     label {
       display: block;
       margin-top: 15px;
-      font-weight: bold;
       color: #444;
     }
 
@@ -40,116 +34,94 @@
       width: 100%;
       padding: 10px;
       margin-top: 5px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      height: 100px;
-      resize: vertical;
     }
 
     button {
       margin-top: 20px;
-      padding: 10px 16px;
-      background-color: #007bff;
-      border: none;
+      background-color: #2a7cff;
       color: white;
-      font-size: 16px;
-      border-radius: 5px;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      width: 100%;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #1a5fd0;
     }
 
-    .success-msg {
-      color: green;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .error-msg {
-      color: red;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .status-box {
-      margin-top: 40px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .status-box table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .status-box th, .status-box td {
+    .success {
       padding: 10px;
-      border: 1px solid #ccc;
+      background: #d4edda;
+      color: #155724;
+      margin-bottom: 15px;
+      border-radius: 8px;
     }
 
-    .approved { color: green; font-weight: bold; }
-    .rejected { color: red; font-weight: bold; }
-    .pending  { color: orange; font-weight: bold; }
+    .error {
+      padding: 10px;
+      background: #f8d7da;
+      color: #721c24;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .user-info img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .user-info h4 {
+      margin: 0;
+      color: #333;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Apply for Leave</h2>
+  <div class="leave-container">
+    <div class="user-info">
+      <% if (user) { %>
+        <% if (user.profilePicture) { %>
+          <img src="/uploads/<%= user.profilePicture %>" alt="Profile Picture">
+        <% } %>
+        <h4><%= user.name %></h4>
+      <% } else { %>
+        <p>User not logged in</p>
+      <% } %>
+    </div>
 
-  <% if (success) { %>
-    <p class="success-msg"><%= success %></p>
-  <% } %>
+    <h2>Apply for Leave</h2>
 
-  <% if (error) { %>
-    <p class="error-msg"><%= error %></p>
-  <% } %>
+    <% if (successMessage) { %>
+      <div class="success"><%= successMessage %></div>
+    <% } %>
 
-  <form action="/leave" method="POST">
-    <label for="date">Date:</label>
-    <input type="date" name="date" id="date" required>
+    <% if (errorMessage) { %>
+      <div class="error"><%= errorMessage %></div>
+    <% } %>
 
-    <label for="reason">Reason:</label>
-    <textarea name="reason" id="reason" required></textarea>
+    <form method="POST" action="/leave/apply-leave">
+      <label>Date:</label>
+      <input type="date" name="date" required>
 
-    <button type="submit">Apply Leave</button>
-  </form>
+      <label>Reason:</label>
+      <textarea name="reason" rows="4" required></textarea>
 
-  <div class="status-box">
-    <h2>Your Leave History</h2>
-    <table>
-      <tr>
-        <th>Date</th>
-        <th>Reason</th>
-        <th>Status</th>
-      </tr>
-      <% leaveHistory.forEach(leave => { %>
-        <tr>
-          <td><%= leave.date.toDateString() %></td>
-          <td><%= leave.reason %></td>
-          <td class="<%= leave.status.toLowerCase() %>">
-            <% if (leave.status === 'Approved') { %>
-              Your leave on <%= leave.date.toDateString() %> is Approved
-            <% } else if (leave.status === 'Rejected') { %>
-              Your leave on <%= leave.date.toDateString() %> is Rejected
-            <% } else { %>
-              Pending
-            <% } %>
-          </td>
-        </tr>
-      <% }) %>
-    </table>
+      <button type="submit">Apply Leave</button>
+    </form>
   </div>
-
-  
 
 </body>
 </html>

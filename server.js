@@ -17,6 +17,7 @@ import logoutRoutes from './routes/logoutRoutes.js';
 import leaveRoutes from './routes/leaveRoutes.js';
 import approveLeaveRoutes from './routes/approveLeaveRoutes.js';
 import userDashboardRoutes from './routes/userDashboardRoutes.js';
+import calenderRoute from './routes/calenderRoute.js'
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.use('/logout', logoutRoutes);
 app.use('/dashboard', userDashboardRoutes);
 app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
+app.use('/celender', calenderRoute);
 
 
 

@@ -16,40 +16,16 @@
 </head>
 <body>
 
-  <div class="sidebar">
-    <h3>Schedule Sync</h3>
-    <a class="nav-link" href="/dashboard">Dashboard</a>
-    <a class="nav-link" href="/celender">Calendar</a>
-   <a class="nav-link" href="/leave/apply-leave">Leave request</a>
+  <!-- Sidebar -->
+  <%- include('partials/userSidebar') %>
 
-
-    <a class="nav-link" href="/inbox-msg">Inbox</a>
-
-    <div style="margin-top: 40px;">
-      <p style="font-weight: 600;">Current View</p>
-      <button class="btn-outline-primary active-view">Meeting</button>
-      <button class="btn-outline-primary">Scheduling</button>
-      <button class="btn-primary">Upcoming Event</button>
-    </div>
-  </div>
-
+  <!-- Main Content -->
   <div class="content">
-    <div class="topbar">
-      <div>
-        <p style="margin: 0; font-weight: 600;">Today</p>
-        <h6><%= new Date().toLocaleDateString() %></h6>
-        <p id="clock" style="color: #6610f2; font-weight: 600;"></p>
-      </div>
-      <div class="user-info">
-        <% let profile = user.profilePic ? '/uploads/' + user.profilePic : '/public/img/default.png'; %>
-        <img src="<%= profile %>" alt="Profile"/>
-        <strong><%= user.name %> (Teacher)</strong>
-        <form action="/logout" method="POST">
-          <button class="logout-btn">Logout</button>
-        </form>
-      </div>
-    </div>
 
+    <!-- Header -->
+    <%- include('partials/userHeader', { user: user }) %>
+
+    <!-- Timetable Table -->
     <div class="table-responsive">
       <table>
         <thead>
@@ -73,7 +49,6 @@
                     <div><strong><%= lecture.subject %></strong></div>
                     <small><%= lecture.startTime %> - <%= lecture.endTime %></small><br/>
                     <span>Room: <%= lecture.room %></span><br/>
-
                     <select onchange="updateStatus('<%= lecture._id %>', this.value)">
                       <option disabled>Status</option>
                       <option value="Pending" <%= lecture.status === 'Pending' ? 'selected' : '' %>>Pending</option>
@@ -115,6 +90,5 @@
       }
     }
   </script>
-
 </body>
 </html>

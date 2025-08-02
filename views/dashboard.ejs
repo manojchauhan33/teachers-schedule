@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/user.css">
   <link rel="stylesheet" href="/css/dashboard.css">
-  <script>
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').innerText = now.toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-    window.onload = updateClock;
-  </script>
+  
+
 </head>
 
 <body>
+  <%- include('partials/userSidebar') %>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Header -->
+    <%- include('partials/userHeader', { user: user }) %>
+
+
 
   <div class="topbar">
-    <div>
-      <h2>Welcome, <%= user.name %></h2>
-      <p><%= new Date().toLocaleDateString() %></p>
-    </div>
     <div style="text-align: right;">
       <p id="clock" style="font-size: 20px;"></p>
     </div>
@@ -39,6 +39,7 @@
       <h3><%= totalLeft %></h3>
       <p>Total Left</p>
     </div>
+  </div>
   </div>
 
 </body>

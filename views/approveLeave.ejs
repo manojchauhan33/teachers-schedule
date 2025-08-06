@@ -4,25 +4,236 @@
   <meta charset="UTF-8">
   <title>Approve Leave</title>
   <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .leave-table {
+      width: 90%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .leave-table th, .leave-table td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .leave-table th {
+      background-color: #f4f4f4;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .leave-table tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .action-btn {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+
+    .approve-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .reject-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+
+    .status.Pending {
+      background-color: #ffc10733;
+      color: #856404;
+    }
+
+    .status.Approved {
+      background-color: #28a74533;
+      color: #155724;
+    }
+
+    .status.Rejected {
+      background-color: #dc354533;
+      color: #721c24;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-top: 30px;
+    }
+
+    .leave-table select {
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 0.9em;
+    }
+
+    .leave-table h4 {
+      margin: 20px 0 10px;
+      font-size: 1.1em;
+      color: #444;
+      text-align: left;
+      padding-left: 15px;
+    }
+
+    .leave-table form {
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    
     <!-- Sidebar Partial -->
     <%- include('partials/sidebar') %>
 
     <!-- Main Content -->
     <div class="main">
-      
       <!-- Header Partial -->
-      <%- include('partials/header') %>
+      <%- include('partials/header', { user: user }) %>
 
-      <!-- Placeholder content -->
-      <div class="time-table-section">
-        <h2 style="text-align: center; color: #aaa; margin-top: 50px;">Approve Leave Page (UI Check Only)</h2>
-      </div>
+      <h2>Approve Leave Requests</h2>
 
+      <table class="leave-table">
+        <thead>
+          <tr>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (leaveRequests && leaveRequests.length > 0) { %>
+            <% leaveRequests.forEach(leave => { %>
+              <tr id="leave-<%= leave._id %>">
+                <td><%= leave.teacher?.name || 'Unknown' %></td>
+                <td><%= leave.date.toDateString() %></td>
+                <td><%= leave.reason %></td>
+                <td class="status <%= leave.status %>"><%= leave.status %></td>
+                <td>
+                  <% if (leave.status === 'Pending') { %>
+                    <button class="action-btn approve-btn" onclick="updateStatus('<%= leave._id %>', 'approve')">Approve</button>
+                    <button class="action-btn reject-btn" onclick="updateStatus('<%= leave._id %>', 'reject')">Reject</button>
+                  <% } else { %>
+                    <span>-</span>
+                  <% } %>
+                </td>
+              </tr>
+
+              <% if (leave.status === 'Approved') { %>
+                <tr>
+                  <td colspan="5">
+                    <h4>Lectures on <%= leave.date.toDateString() %> for <%= leave.teacher?.name %>:</h4>
+
+                    <% if (leave.lectures && leave.lectures.length > 0) { %>
+                      <table class="leave-table">
+                        <thead>
+                          <tr>
+                            <th>Lecture</th>
+                            <th>Time</th>
+                            <th>Subject</th>
+                            <th>Room</th>
+                            <th>Assign To</th>
+                            <th>Send Request</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% leave.lectures.forEach(lecture => { %>
+                            <tr>
+                              <td><%= lecture.lecture %></td>
+                              <td>
+                                <%= lecture.startTime || 'N/A' %> - <%= lecture.endTime || 'N/A' %>
+                              </td>
+                              <td><%= lecture.subject || 'N/A' %></td>
+                              <td><%= lecture.room || 'N/A' %></td>
+                              <td>
+                                <form action="/adjustments/send" method="POST">
+                                  <input type="hidden" name="lectureId" value="<%= lecture._id %>">
+                                  <input type="hidden" name="originalTeacher" value="<%= leave.teacher._id %>">
+
+                                  <select name="replacementTeacher" required>
+                                      <option value="">Select Teacher</option>
+                                      <% if (leave.availableTeachers && leave.availableTeachers.length > 0) { %>
+                                        <% leave.availableTeachers
+                                          .filter(t => t._id.toString() !== (leave.teacher?._id?.toString() || ''))
+                                          .forEach(teacher => { %>
+                                            <option value="<%= teacher._id %>"><%= teacher.name %> - <%= teacher.email %></option>
+                                        <% }) %>
+                                      <% } else { %>
+                                        <option disabled>No teachers available</option>
+                                      <% } %>
+                                    </select>
+
+
+                              </td>
+                              <td>
+                                  <button class="action-btn approve-btn" type="submit">Send</button>
+                                </form>
+                              </td>
+                            </tr>
+                          <% }) %>
+                        </tbody>
+                      </table>
+                    <% } else { %>
+                      <p>No lectures found for this day.</p>
+                    <% } %>
+                  </td>
+                </tr>
+              <% } %>
+
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">No leave requests found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
   </div>
+
+  <script>
+    async function updateStatus(leaveId, action) {
+      try {
+        const response = await fetch(`/approveLeave/${action}/${leaveId}`, {
+          method: 'POST'
+        });
+
+        if (response.ok) {
+          const row = document.getElementById(`leave-${leaveId}`);
+          const statusCell = row.querySelector('.status');
+          const actionsCell = row.querySelector('td:last-child');
+
+          const newStatus = action === 'approve' ? 'Approved' : 'Rejected';
+          statusCell.innerText = newStatus;
+          statusCell.className = `status ${newStatus}`;
+          actionsCell.innerHTML = `<span>-</span>`;
+
+          location.reload(); 
+        } else {
+          alert('Failed to update status.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Something went wrong.');
+      }
+    }
+  </script>
 </body>
 </html>

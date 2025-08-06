@@ -58,7 +58,7 @@
                       <div><strong><%= entry.subject %></strong></div>
                       <div><%= entry.startTime %> - <%= entry.endTime %></div>
                       <div>Room: <%= entry.room %></div>
-                      <div>Status: <%= entry.status || 'Pending' %></div>
+                      <!-- <div>Status: <%= entry.status || 'Pending' %></div> -->
 
                       <form action="/assign-timetable/delete" method="POST" class="delete-form">
                         <input type="hidden" name="teacherId" value="<%= selectedTeacherId %>">

@@ -16,10 +16,12 @@ async function saveTimetable(req, res) {
   try {
     const { teacherId, day, lecture, subject, startTime, endTime, room } = req.body;
 
-    // Remove existing lecture entry for the same teacher/day/period
+    
+    
     await Timetable.deleteOne({ teacher: teacherId, day, lecture });
 
-    // Save new lecture entry
+
+    
     const newEntry = new Timetable({
       teacher: teacherId,
       day,
@@ -30,6 +32,7 @@ async function saveTimetable(req, res) {
       room
     });
 
+    
     await newEntry.save();
     res.redirect(`/admin?teacherId=${teacherId}`);
   } catch (error) {

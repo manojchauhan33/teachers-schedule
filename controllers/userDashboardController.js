@@ -5,6 +5,7 @@ async function renderDashboardPage(req, res) {
   try {
     const userId = req.session.user.id;
     const user = await User.findById(userId);
+
     const timetable = await Timetable.find({ teacher: userId });
 
     const totalLectures = timetable.length;
@@ -12,17 +13,15 @@ async function renderDashboardPage(req, res) {
     const totalLeft = timetable.filter(t => t.status === 'Left').length;
 
 
+
+
+    
     res.render('dashboard', {
-      user: {
-        name: user.name
-      },
+      user, 
       totalLectures,
       totalDone,
       totalLeft
     });
-
-
-
   } catch (error) {
     console.error('Error:', error);
   }

@@ -9,17 +9,20 @@ async function renderAdminDashboard(req, res) {
 
     let timetableData = [];
 
+    // console.log(timetableData);
+
     if (selectedTeacherId) {
       timetableData = await Timetable.find({ teacher: selectedTeacherId }).populate('subject');
     }
 
     res.render('admin', {
-      user: req.session.user,
+      user: req.session.user,    //render from here
       teachers,
       timetableData,
       selectedTeacherId
     });
 
+    
   } catch (error) {
     console.error('Error rendering admin dashboard:', error);
     res.status(500).send('Internal Server Error');

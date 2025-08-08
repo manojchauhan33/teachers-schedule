@@ -1,23 +1,23 @@
 import Leave from '../models/leave.js';
 import Timetable from '../models/timetable.js';
 
-
-
-export const renderLeaveForm = async (req, res) => {
+const renderLeaveForm = async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   try {
     const teacherId = req.session.user.id;
     const leaveRequests = await Leave.find({ teacher: teacherId }).sort({ date: 1 });
 
+    //console.log(leaveRequests);
+
+
     let lectures = [];
 
     if (leaveRequests.length > 0) {
       const today = new Date();
-
-      
-      
-      const upcomingLeave = leaveRequests.find(lr => new Date(lr.date).toDateString() >= today.toDateString());
+      const upcomingLeave = leaveRequests.find(lr =>
+        new Date(lr.date).toDateString() >= today.toDateString()
+      );
 
       if (upcomingLeave) {
         const dayName = new Date(upcomingLeave.date).toLocaleString('en-US', { weekday: 'long' });
@@ -29,8 +29,6 @@ export const renderLeaveForm = async (req, res) => {
       }
     }
 
-
-
     res.render('leave', {
       user: req.session.user,
       successMessage: null,
@@ -38,6 +36,8 @@ export const renderLeaveForm = async (req, res) => {
       leaveRequests,
       lectures
     });
+
+
 
   } catch (err) {
     console.error("Error fetching leaves:", err);
@@ -53,7 +53,7 @@ export const renderLeaveForm = async (req, res) => {
 
 
 
-export const submitLeave = async (req, res) => {
+const submitLeave = async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   const { date, reason } = req.body;
@@ -62,8 +62,6 @@ export const submitLeave = async (req, res) => {
   try {
     const leaveRequests = await Leave.find({ teacher: teacherId }).sort({ date: 1 });
 
- 
-    
     if (!date || !reason) {
       return res.render('leave', {
         user: req.session.user,
@@ -74,7 +72,9 @@ export const submitLeave = async (req, res) => {
       });
     }
 
-    
+
+
+
     const existingLeave = await Leave.findOne({ teacher: teacherId, date });
     if (existingLeave) {
       return res.render('leave', {
@@ -86,7 +86,9 @@ export const submitLeave = async (req, res) => {
       });
     }
 
-    
+
+
+
     const newLeave = new Leave({
       teacher: teacherId,
       date,
@@ -95,12 +97,9 @@ export const submitLeave = async (req, res) => {
     });
     await newLeave.save();
 
-    
     const leaveDate = new Date(date);
     const dayName = leaveDate.toLocaleString('en-US', { weekday: 'long' });
 
-
-    
     const lectures = await Timetable.find({
       teacher: teacherId,
       day: dayName
@@ -116,8 +115,12 @@ export const submitLeave = async (req, res) => {
       lectures
     });
 
+
+
+
   } catch (error) {
     console.error("Error submitting leave:", error);
+    
     res.status(500).render('leave', {
       user: req.session.user || null,
       successMessage: null,
@@ -130,7 +133,8 @@ export const submitLeave = async (req, res) => {
 
 
 
-export const deleteLeaveRequest = async (req, res) => {
+
+const deleteLeaveRequest = async (req, res) => {
   const leaveId = req.params.id;
   const teacherId = req.session.user?.id;
 
@@ -155,3 +159,6 @@ export const deleteLeaveRequest = async (req, res) => {
     res.status(500).send("Error deleting leave");
   }
 };
+
+
+export { renderLeaveForm, submitLeave, deleteLeaveRequest };

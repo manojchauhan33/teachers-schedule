@@ -4,43 +4,76 @@
   <meta charset="UTF-8">
   <title>Teacher Dashboard</title>
   <link rel="stylesheet" href="/css/user.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
-  
 
+  <style>
+    .counters {
+      display: flex;
+      justify-content: space-around;
+      margin: 40px 20px 0 20px;
+      padding: 20px;
+    }
+
+    .counter-box {
+      background-color: white;
+      padding: 30px;
+      width: 25%;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .counter-box h3 {
+      margin: 10px 0;
+      font-size: 28px;
+      color: #6200ea;
+    }
+
+    .counter-box p {
+      font-size: 16px;
+      color: #555;
+    }
+  </style>
 </head>
-
 <body>
+  <!-- Sidebar -->
   <%- include('partials/userSidebar') %>
 
-  <!-- Main Content -->
+  <!-- Main content area -->
   <div class="content">
-
-    <!-- Header -->
+    
+    <!-- Top header -->
     <%- include('partials/userHeader', { user: user }) %>
 
-
-
-  <div class="topbar">
-    <div style="text-align: right;">
-      <p id="clock" style="font-size: 20px;"></p>
+    <div class="counters">
+      <div class="counter-box">
+        <h3><%= totalLectures %></h3>
+        <p>Total Lectures</p>
+      </div>
+      <div class="counter-box">
+        <h3><%= totalDone %></h3>
+        <p>Total Done</p>
+      </div>
+      <div class="counter-box">
+        <h3><%= totalLeft %></h3>
+        <p>Total Left</p>
+      </div>
     </div>
+
   </div>
 
-  <div class="counters">
-    <div class="counter-box">
-      <h3><%= totalLectures %></h3>
-      <p>Total Lectures</p>
-    </div>
-    <div class="counter-box">
-      <h3><%= totalDone %></h3>
-      <p>Total Done</p>
-    </div>
-    <div class="counter-box">
-      <h3><%= totalLeft %></h3>
-      <p>Total Left</p>
-    </div>
-  </div>
-  </div>
+  
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString();
+      const today = now.toLocaleDateString();
+      document.getElementById('clock').textContent = time;
+      const dateEl = document.getElementById('date');
+      if (dateEl) dateEl.textContent = today;
+    }
 
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 </body>
 </html>

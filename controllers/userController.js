@@ -8,6 +8,9 @@ async function renderUserDashboard(req, res) {
     const user = await User.findById(userId);
     const timetable = await Timetable.find({ teacher: userId });
 
+    // console.log(user);
+    // console.log(timetable);
+
 
     res.render('user', {
       user: {
@@ -47,7 +50,7 @@ async function updateLectureStatus(req, res) {
   }
 }
 
-
+// console.log(req.body);
 
 function logoutUser(req, res) {
   req.session.destroy(err => {

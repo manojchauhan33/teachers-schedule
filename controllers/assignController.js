@@ -5,12 +5,19 @@ async function renderAssignTimetable(req, res) {
   try {
     const teacherId = req.query.teacherId;
     const teacher = await User.findById(teacherId);
+
     res.render('assignTimetable', { teacher });
+
+    // render from here ^
+
   } catch (error) {
     console.error('Error rendering assign timetable:', error);
     res.status(500).send('Error loading form');
   }
 }
+
+
+// console.log(teacher);
 
 async function saveTimetable(req, res) {
   try {
@@ -32,9 +39,11 @@ async function saveTimetable(req, res) {
       room
     });
 
+    console.log(newEntry);
     
     await newEntry.save();
     res.redirect(`/admin?teacherId=${teacherId}`);
+    
   } catch (error) {
     console.error('Error saving timetable:', error);
     res.status(500).send('Failed to save timetable');

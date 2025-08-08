@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -7,6 +8,7 @@ const userSchema = new mongoose.Schema({
   role: String,
   profilePic: String
 });
+
 
 const User = mongoose.model('User', userSchema);
 

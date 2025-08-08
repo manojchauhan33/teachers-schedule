@@ -2,7 +2,7 @@ import User from '../models/user.js';
 
 const signup = async (req, res) => {
   const { name, email, password, role } = req.body;    //object distructing
-  console.log(req.body);
+  // console.log(req.body);
   const profilePic = req.file ? req.file.filename : null;
 
   try {
@@ -20,6 +20,7 @@ const signup = async (req, res) => {
       profilePic
     });
 
+    
     // console.log(newUser);
 
 

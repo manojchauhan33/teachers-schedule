@@ -7,7 +7,6 @@ import {renderAssignTimetable,saveTimetable,deleteLecture} from '../controllers/
 const router = express.Router();
 
 
-
 router.get('/', roleCheck('admin'), renderAssignTimetable);
 router.post('/', roleCheck('admin'), saveTimetable);
 router.post('/delete', roleCheck('admin'), deleteLecture);

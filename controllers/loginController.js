@@ -10,6 +10,7 @@ const loginController = async (req, res) => {
       return res.send('Invalid email or password');
     }
 
+    //console.log(req.body);
 
     req.session.user = {
       id: user._id,

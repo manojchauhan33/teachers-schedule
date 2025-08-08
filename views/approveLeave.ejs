@@ -98,12 +98,9 @@
 </head>
 <body>
   <div class="container">
-    <!-- Sidebar Partial -->
     <%- include('partials/sidebar') %>
 
-    <!-- Main Content -->
     <div class="main">
-      <!-- Header Partial -->
       <%- include('partials/header', { user: user }) %>
 
       <h2>Approve Leave Requests</h2>
@@ -163,26 +160,26 @@
                               <td><%= lecture.subject || 'N/A' %></td>
                               <td><%= lecture.room || 'N/A' %></td>
                               <td>
-                                <form action="/adjustments/send" method="POST">
+                                <form action="/approveLeave/adjustment/send" method="POST">
                                   <input type="hidden" name="lectureId" value="<%= lecture._id %>">
-                                  <input type="hidden" name="originalTeacher" value="<%= leave.teacher._id %>">
+                                  <input type="hidden" name="originalTeacherId" value="<%= leave.teacher._id %>">
+                                  <input type="hidden" name="leaveDate" value="<%= leave.date.toISOString() %>">
 
-                                  <select name="replacementTeacher" required>
-                                      <option value="">Select Teacher</option>
-                                      <% if (leave.availableTeachers && leave.availableTeachers.length > 0) { %>
-                                        <% leave.availableTeachers
-                                          .filter(t => t._id.toString() !== (leave.teacher?._id?.toString() || ''))
-                                          .forEach(teacher => { %>
-                                            <option value="<%= teacher._id %>"><%= teacher.name %> - <%= teacher.email %></option>
-                                        <% }) %>
-                                      <% } else { %>
-                                        <option disabled>No teachers available</option>
-                                      <% } %>
-                                    </select>
+                                  <select name="replacementTeacherId" required>
+                                    <option value="">Select Teacher</option>
+                                    <% if (leave.availableTeachers && leave.availableTeachers.length > 0) { %>
+                                      <% leave.availableTeachers
+                                        .filter(t => t._id.toString() !== leave.teacher._id.toString())
+                                        .forEach(teacher => { %>
+                                          <option value="<%= teacher._id %>">
+                                            <%= teacher.name %> - <%= teacher.email %>
+                                          </option>
+                                      <% }) %>
+                                    <% } else { %>
+                                      <option disabled>No teachers available</option>
+                                    <% } %>
+                                  </select>
 
-
-                              </td>
-                              <td>
                                   <button class="action-btn approve-btn" type="submit">Send</button>
                                 </form>
                               </td>
@@ -196,7 +193,6 @@
                   </td>
                 </tr>
               <% } %>
-
             <% }) %>
           <% } else { %>
             <tr>
@@ -216,16 +212,7 @@
         });
 
         if (response.ok) {
-          const row = document.getElementById(`leave-${leaveId}`);
-          const statusCell = row.querySelector('.status');
-          const actionsCell = row.querySelector('td:last-child');
-
-          const newStatus = action === 'approve' ? 'Approved' : 'Rejected';
-          statusCell.innerText = newStatus;
-          statusCell.className = `status ${newStatus}`;
-          actionsCell.innerHTML = `<span>-</span>`;
-
-          location.reload(); 
+          location.reload();
         } else {
           alert('Failed to update status.');
         }

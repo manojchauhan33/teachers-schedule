@@ -2,33 +2,35 @@ import Leave from '../models/leave.js';
 import Timetable from '../models/timetable.js';
 import User from '../models/user.js';
 
-export const renderApprovePage = async (req, res) => {
+
+
+const renderApprovePage = async (req, res) => {
   try {
     const leaveRequests = await Leave.find()
       .populate('teacher')
       .sort({ date: -1 });
 
-   
-      
     for (let leave of leaveRequests) {
       if (leave.status === 'Approved') {
         const leaveDate = new Date(leave.date);
         const dayName = leaveDate.toLocaleDateString('en-US', { weekday: 'long' });
 
-        
-        
         const lectures = await Timetable.find({
           teacher: leave.teacher._id,
           day: dayName
         });
 
-        
         leave.lectures = lectures;
 
-        
-        
-        const allTeachers = await User.find({ role: 'teacher' });
-        const leavesOnThatDay = await Leave.find({ date: leave.date, status: 'Approved' });
+        const allTeachers = await User.find({ role: 'user' });
+
+        const leavesOnThatDay = await Leave.find({
+          date: {
+            $gte: new Date(leave.date.setHours(0, 0, 0, 0)),
+            $lte: new Date(leave.date.setHours(23, 59, 59, 999))
+          },
+          status: 'Approved'
+        });
 
         const teachersOnLeaveIds = leavesOnThatDay.map(l => l.teacher.toString());
 
@@ -40,17 +42,23 @@ export const renderApprovePage = async (req, res) => {
       }
     }
 
-    res.render('approveLeave', {
+
+    res.render('approveLeave', {   
       user: req.session.user,
       leaveRequests
     });
+
+
   } catch (err) {
     console.error('Error loading leave requests:', err);
     res.status(500).send('Failed to load leave requests.');
   }
 };
 
-export const approveLeave = async (req, res) => {
+
+
+
+const approveLeave = async (req, res) => {
   try {
     await Leave.findByIdAndUpdate(req.params.id, { status: 'Approved' });
     res.sendStatus(200);
@@ -60,7 +68,9 @@ export const approveLeave = async (req, res) => {
   }
 };
 
-export const rejectLeave = async (req, res) => {
+
+
+const rejectLeave = async (req, res) => {
   try {
     await Leave.findByIdAndUpdate(req.params.id, { status: 'Rejected' });
     res.sendStatus(200);
@@ -69,3 +79,5 @@ export const rejectLeave = async (req, res) => {
     res.status(500).send('Error rejecting leave.');
   }
 };
+
+export { renderApprovePage, approveLeave, rejectLeave };

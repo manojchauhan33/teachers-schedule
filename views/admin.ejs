@@ -21,7 +21,8 @@
     
     <div class="time-table-section">
       <div class="time-table-header">
-        <form id="teacherForm" method="get" action="/admin">
+        <form id="teacherForm" method="get" action="/admin">   
+          <!-- render here -->
           <select name="teacherId" id="teacherSelect" onchange="document.getElementById('teacherForm').submit()">
             <% teachers.forEach(teacher => { %>
               <option value="<%= teacher._id %>" <%= teacher._id.toString() === selectedTeacherId ? 'selected' : '' %>><%= teacher.name %> - <%= teacher.email %></option>
@@ -60,7 +61,8 @@
                       <div>Room: <%= entry.room %></div>
                       <!-- <div>Status: <%= entry.status || 'Pending' %></div> -->
 
-                      <form action="/assign-timetable/delete" method="POST" class="delete-form">
+                      <form action="/assign-timetable/delete" method="POST" class="delete-form">        
+                        <!-- //render here  -->
                         <input type="hidden" name="teacherId" value="<%= selectedTeacherId %>">
                         <input type="hidden" name="day" value="<%= day %>">
                         <input type="hidden" name="lecture" value="<%= lectureName %>">

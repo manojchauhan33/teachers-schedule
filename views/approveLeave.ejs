@@ -159,30 +159,40 @@
                               </td>
                               <td><%= lecture.subject || 'N/A' %></td>
                               <td><%= lecture.room || 'N/A' %></td>
-                              <td>
-                                <form action="/approveLeave/adjustment/send" method="POST">
-                                  <input type="hidden" name="lectureId" value="<%= lecture._id %>">
-                                  <input type="hidden" name="originalTeacherId" value="<%= leave.teacher._id %>">
-                                  <input type="hidden" name="leaveDate" value="<%= leave.date.toISOString() %>">
+                            
 
-                                  <select name="replacementTeacherId" required>
-                                    <option value="">Select Teacher</option>
-                                    <% if (leave.availableTeachers && leave.availableTeachers.length > 0) { %>
-                                      <% leave.availableTeachers
-                                        .filter(t => t._id.toString() !== leave.teacher._id.toString())
-                                        .forEach(teacher => { %>
-                                          <option value="<%= teacher._id %>">
-                                            <%= teacher.name %> - <%= teacher.email %>
-                                          </option>
-                                      <% }) %>
-                                    <% } else { %>
-                                      <option disabled>No teachers available</option>
-                                    <% } %>
-                                  </select>
+                               <td>
+                                          <% if (lecture.adjustmentStatus === 'Requested' && lecture.adjustmentRequest) { %>
+                                            <span class="status requested">
+                                              Requested to: <%= lecture.adjustmentRequest.replacementTeacher.name %> 
+                                              (<%= lecture.adjustmentRequest.replacementTeacher.email %>)
+                                            </span>
+                                          <% } else { %>
+                                            <form action="/approveLeave/send" method="POST" class="adjustment-form">
+                                              <input type="hidden" name="lectureId" value="<%= lecture._id %>">
+                                              <input type="hidden" name="originalTeacherId" value="<%= leave.teacher._id %>">
+                                              <input type="hidden" name="leaveDate" value="<%= leave.date.toISOString() %>">
 
-                                  <button class="action-btn approve-btn" type="submit">Send</button>
-                                </form>
-                              </td>
+                                              <select name="replacementTeacherId" required>
+                                                <option value="">Select Teacher</option>
+                                                <% leave.availableTeachers
+                                                  .filter(t => t._id.toString() !== leave.teacher._id.toString())
+                                                  .forEach(teacher => { %>
+                                                    <option value="<%= teacher._id %>">
+                                                      <%= teacher.name %> - <%= teacher.email %>
+                                                    </option>
+                                                <% }) %>
+                                              </select>
+
+                                              <button type="submit">Send</button>
+                                            </form>
+                                          <% } %>
+                                        </td>
+
+
+
+
+
                             </tr>
                           <% }) %>
                         </tbody>
@@ -221,6 +231,54 @@
         alert('Something went wrong.');
       }
     }
+
+   
+      
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.adjustment-form').forEach(form => {
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('/approveLeave/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          const adjustment = json.adjustment;
+
+          // Parent td jahan form hai
+          const td = form.parentElement;
+
+          // Form remove karo
+          form.remove();
+
+          // Naya span create karo with requested teacher info
+          const span = document.createElement('span');
+          span.classList.add('status', 'requested');
+          span.textContent = `Requested to: ${adjustment.replacementTeacher.name} (${adjustment.replacementTeacher.email})`;
+
+          td.appendChild(span);
+        } else {
+          alert('Failed to send adjustment');
+        }
+      } catch (err) {
+        console.error('Error sending adjustment:', err);
+        alert('Something went wrong while sending adjustment');
+      }
+    });
+  });
+});
+
+
+
   </script>
 </body>
 </html>

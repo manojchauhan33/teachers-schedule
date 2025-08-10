@@ -1,8 +1,7 @@
 import Leave from '../models/leave.js';
 import Timetable from '../models/timetable.js';
 import User from '../models/user.js';
-
-
+import AdjustmentRequest from '../models/adjustmentRequest.js';  // add this import
 
 const renderApprovePage = async (req, res) => {
   try {
@@ -19,6 +18,20 @@ const renderApprovePage = async (req, res) => {
           teacher: leave.teacher._id,
           day: dayName
         });
+
+        // Fetch adjustment requests with status 'Requested' for these lectures
+        const adjustmentRequests = await AdjustmentRequest.find({
+          lecture: { $in: lectures.map(l => l._id) },
+          status: 'Requested'
+        }).populate('replacementTeacher');
+
+        // Attach adjustmentRequest to each lecture if exists
+        for (let lecture of lectures) {
+          const adj = adjustmentRequests.find(ar => ar.lecture.toString() === lecture._id.toString());
+          if (adj) {
+            lecture.adjustmentRequest = adj;
+          }
+        }
 
         leave.lectures = lectures;
 
@@ -38,25 +51,23 @@ const renderApprovePage = async (req, res) => {
           !teachersOnLeaveIds.includes(t._id.toString())
         );
 
+        //console.log(availableTeachers);
         leave.availableTeachers = availableTeachers;
       }
     }
 
-
-    res.render('approveLeave', {   
+    res.render('approveLeave', {        // render from here 
       user: req.session.user,
       leaveRequests
     });
 
+    //console.log(leaveRequests)
 
   } catch (err) {
     console.error('Error loading leave requests:', err);
     res.status(500).send('Failed to load leave requests.');
   }
 };
-
-
-
 
 const approveLeave = async (req, res) => {
   try {
@@ -67,8 +78,6 @@ const approveLeave = async (req, res) => {
     res.status(500).send('Error approving leave.');
   }
 };
-
-
 
 const rejectLeave = async (req, res) => {
   try {

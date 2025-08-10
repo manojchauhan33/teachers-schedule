@@ -1,29 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Approve Leave</title>
-  <link rel="stylesheet" href="/css/user.css">
+  <meta charset="UTF-8" />
+  <title>Inbox - Adjustment Requests</title>
+  <link rel="stylesheet" href="/css/user.css" />
+  <style>
+    .time-table-section h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #2980b9;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .no-data {
+      margin-top: 20px;
+      font-style: italic;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    
-    
-    <%- include('partials/userSidebar') %>
+  
+  <!-- Sidebar -->
+  <%- include('partials/userSidebar') %>
 
+  <!-- Main content -->
+  <div class="content">
     
-    <div class="main">
-      
-      
-      <%- include('partials/userHeader') %>
+    <!-- Header -->
+    <%- include('partials/userHeader', { user: user }) %>
 
-      
-      
-      <div class="time-table-section">
-        <h2>inbox user page</h2>
-      </div>
+    <div class="time-table-section">
+      <h2>Inbox - Your Adjustment Requests</h2>
 
+      <% if (!adjustments || adjustments.length === 0) { %>
+        <p class="no-data">No adjustment requests found.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Day</th>
+              <th>Teacher</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% adjustments.forEach(adj => { %>
+              <tr>
+                <td><%= adj.lecture?.subject || "N/A" %></td>
+                <td><%= adj.lecture?.day || "N/A" %></td>
+                <td><%= adj.originalTeacher?.name || "N/A" %></td>
+                <td><%= adj.date ? new Date(adj.date).toLocaleDateString() : "N/A" %></td>
+                <td><%= adj.status || "Pending" %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
     </div>
   </div>
+
 </body>
 </html>

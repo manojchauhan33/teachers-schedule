@@ -1,137 +1,40 @@
-// import AdjustmentRequest from '../models/adjustmentRequest.js';
-// import Timetable from '../models/timetable.js';
-// import User from '../models/user.js';
-// import Leave from '../models/leave.js';
+import AdjustmentRequest from '../models/adjustmentRequest.js';
+import Timetable from '../models/timetable.js';
 
-// export const getAdjustmentOptions = async (req, res) => {
-//   try {
-//     const leaveId = req.params.leaveId;
-//     const leave = await Leave.findById(leaveId).populate('teacher');
-//     console.log(leave);
+export const sendAdjustment = async (req, res) => {
+  try {
+    const { lectureId, replacementTeacherId, leaveDate, originalTeacherId } = req.body;
 
-//     if (!leave) return res.status(404).send('Leave not found');
+    if (!lectureId || !replacementTeacherId || !leaveDate || !originalTeacherId) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
 
-//     const leaveDate = new Date(leave.date);
-//     const dayName = leaveDate.toLocaleString('en-US', { weekday: 'long' });
+    const lecture = await Timetable.findById(lectureId).populate('teacher');
+    if (!lecture) {
+      return res.status(404).json({ error: 'Lecture not found.' });
+    }
 
-//     console.log(leaveDate);
-//     console.log(dayName);
+    const adjustment = new AdjustmentRequest({
+      lecture: lecture._id,
+      originalTeacher: originalTeacherId,
+      replacementTeacher: replacementTeacherId,
+      date: new Date(leaveDate),
+      status: 'Requested'
+    });
 
-//     const lectures = await Timetable.find({
-//       teacher: leave.teacher._id,
-//       day: { $regex: new RegExp(`^${dayName}$`, 'i') }
-//     }).populate('subject');
+    await adjustment.save();
 
-//     const leaveDateStart = new Date(leave.date);
-//     leaveDateStart.setHours(0, 0, 0, 0);
+    await Timetable.findByIdAndUpdate(lectureId, { adjustmentStatus: 'Requested' });
 
-//     const leaveDateEnd = new Date(leave.date);
-//     leaveDateEnd.setHours(23, 59, 59, 999);
+    // Populate replacementTeacher for sending back full data
+    const populatedAdjustment = await AdjustmentRequest.findById(adjustment._id).populate('replacementTeacher');
 
-//     const sameDayLeaves = await Leave.find({
-//       date: { $gte: leaveDateStart, $lte: leaveDateEnd }
-//     });
+    console.log(`Adjustment request saved and timetable updated for Lecture ID: ${lectureId}`);
 
-//     const onLeaveTeacherIds = sameDayLeaves.map(l => l.teacher.toString());
-
-//     const availableTeachers = await User.find({
-//       _id: { $nin: onLeaveTeacherIds },
-//       role: 'user' // <== YOUR TEACHER ROLE
-//     });
-    
-    
-
-//     res.render('approveLeave', { leave, lectures, availableTeachers });
-
-//   } catch (err) {
-//     console.error('Error in getAdjustmentOptions:', err);
-//     res.status(500).send('Server error');
-//   }
-// };
-
-// export const sendAdjustmentRequest = async (req, res) => {
-//   try {
-//     const { lectureId, originalTeacherId, replacementTeacherId } = req.body;
-//     console.log(req.body);
-
-//     if (!lectureId || !originalTeacherId || !replacementTeacherId) {
-//       return res.redirect('/approveLeave');
-//     }
-
-//     const existingRequest = await AdjustmentRequest.findOne({
-//       lecture: lectureId
-//     });
-
-//     if (existingRequest) {
-//       console.log('Request already exists');
-//       return res.redirect('/approveLeave');
-//     }
-
-//     const newRequest = new AdjustmentRequest({
-//       lecture: lectureId,
-//       originalTeacher: originalTeacherId,
-//       replacementTeacher: replacementTeacherId,
-//       status: 'Pending'
-//     });
-
-//     await newRequest.save();
-//     console.log('Adjustment request sent');
-//     return res.redirect('/approveLeave');
-
-//   } catch (err) {
-//     console.error('Error in sendAdjustmentRequest:', err);
-//     return res.redirect('/approveLeave');
-//   }
-// };
-
-// export const acceptAdjustment = async (req, res) => {
-//   try {
-//     const { requestId } = req.params;
-
-//     const request = await AdjustmentRequest.findById(requestId);
-//     if (!request) return res.status(404).send('Request not found');
-
-//     if (request.status !== 'Pending') {
-//       return res.status(400).send('Only pending requests can be accepted');
-//     }
-
-//     await Timetable.findByIdAndUpdate(request.lecture, {
-//       teacher: request.replacementTeacher
-//     });
-
-//     request.status = 'Accepted';
-//     await request.save();
-
-//     return res.redirect('/inbox');
-
-//   } catch (err) {
-//     console.error('Error in acceptAdjustment:', err);
-//     return res.redirect('/inbox');
-//   }
-// };
-
-// export const rejectAdjustment = async (req, res) => {
-//   try {
-//     const { requestId } = req.params;
-//     const { reason } = req.body;
-
-//     if (!reason) return res.redirect('/inbox');
-
-//     const request = await AdjustmentRequest.findById(requestId);
-//     if (!request) return res.status(404).send('Request not found');
-
-//     if (request.status !== 'Pending') {
-//       return res.status(400).send('Only pending requests can be rejected');
-//     }
-
-//     request.status = 'Rejected';
-//     request.rejectionReason = reason;
-//     await request.save();
-
-//     return res.redirect('/inbox');
-
-//   } catch (err) {
-//     console.error('Error in rejectAdjustment:', err);
-//     return res.redirect('/inbox');
-//   }
-// };
+    // Send JSON response with adjustment info
+    res.status(200).json({ adjustment: populatedAdjustment });
+  } catch (error) {
+    console.error('Error sending adjustment request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

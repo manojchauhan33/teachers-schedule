@@ -1,5 +1,7 @@
+// controllers/adjustmentController.js
 import AdjustmentRequest from '../models/adjustmentRequest.js';
 import Timetable from '../models/timetable.js';
+
 
 export const sendAdjustment = async (req, res) => {
   try {
@@ -22,19 +24,26 @@ export const sendAdjustment = async (req, res) => {
       status: 'Requested'
     });
 
+    //console.log(adjustment) 
+
     await adjustment.save();
 
     await Timetable.findByIdAndUpdate(lectureId, { adjustmentStatus: 'Requested' });
 
-    // Populate replacementTeacher for sending back full data
+
     const populatedAdjustment = await AdjustmentRequest.findById(adjustment._id).populate('replacementTeacher');
 
     console.log(`Adjustment request saved and timetable updated for Lecture ID: ${lectureId}`);
 
-    // Send JSON response with adjustment info
     res.status(200).json({ adjustment: populatedAdjustment });
   } catch (error) {
     console.error('Error sending adjustment request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
+
+
+

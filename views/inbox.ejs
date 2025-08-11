@@ -5,45 +5,29 @@
   <title>Inbox - Adjustment Requests</title>
   <link rel="stylesheet" href="/css/user.css" />
   <style>
-    .time-table-section h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background-color: #2980b9;
+    .time-table-section h2 { color: #2c3e50; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    th, td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #2980b9; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    .no-data { margin-top: 20px; font-style: italic; color: #777; }
+    button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
       color: white;
     }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    .no-data {
-      margin-top: 20px;
-      font-style: italic;
-      color: #777;
-    }
+    button.accept { background-color: #28a745; }
+    button.reject { background-color: #dc3545; }
   </style>
 </head>
 <body>
   
-  <!-- Sidebar -->
   <%- include('partials/userSidebar') %>
 
-  <!-- Main content -->
   <div class="content">
-    
-    <!-- Header -->
     <%- include('partials/userHeader', { user: user }) %>
 
     <div class="time-table-section">
@@ -59,7 +43,7 @@
               <th>Day</th>
               <th>Teacher</th>
               <th>Date</th>
-              <th>Status</th>
+              <th>Status / Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -69,7 +53,14 @@
                 <td><%= adj.lecture?.day || "N/A" %></td>
                 <td><%= adj.originalTeacher?.name || "N/A" %></td>
                 <td><%= adj.date ? new Date(adj.date).toLocaleDateString() : "N/A" %></td>
-                <td><%= adj.status || "Pending" %></td>
+                <td>
+                  <% if (adj.status === 'Requested' || adj.status === 'Pending') { %>
+                    <button class="accept" onclick="updateAdjustment('<%= adj._id %>', 'accept')">Accept</button>
+                    <button class="reject" onclick="rejectWithReason('<%= adj._id %>')">Reject</button>
+                  <% } else { %>
+                    <%= adj.status %>
+                  <% } %>
+                </td>
               </tr>
             <% }) %>
           </tbody>
@@ -77,6 +68,54 @@
       <% } %>
     </div>
   </div>
+
+  <script>
+    async function updateAdjustment(id, action) {
+    try {
+      const response = await fetch(`/inbox/${action}/${id}`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (response.ok) {
+        alert(`Request ${action}ed successfully`);
+        location.reload();
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Failed to update request');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Something went wrong');
+    }
+  }
+
+
+  async function rejectWithReason(id) {
+  const reason = prompt('Please enter rejection reason:');
+  if (!reason || reason.trim() === '') {
+    alert('Rejection reason is required!');
+    return;
+  }
+  try {
+    const response = await fetch(`/inbox/reject/${id}`, { 
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    });
+    if (response.ok) {
+      alert('Request rejected successfully');
+      location.reload();
+    } else {
+      const data = await response.json();
+      alert(data.error || 'Failed to reject request');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Something went wrong');
+  }
+}
+
+  </script>
 
 </body>
 </html>

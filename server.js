@@ -44,9 +44,9 @@ app.use(session({
   secret: '234567udsxcvbjfyujhvvn',
   resave: false,
   saveUninitialized: true,
-  // cookie: {
-  //   maxAge: 1000 * 60 * 60 * 24 
-  // }
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 
+  }
 }));
 
 
@@ -70,6 +70,7 @@ app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
 app.use('/celender', calenderRoute);
 app.use('/inbox',inboxRoute);
+
 
 
 

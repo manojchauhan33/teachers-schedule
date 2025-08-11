@@ -254,13 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const json = await res.json();
           const adjustment = json.adjustment;
 
-          // Parent td jahan form hai
+          
           const td = form.parentElement;
 
-          // Form remove karo
+        
           form.remove();
 
-          // Naya span create karo with requested teacher info
+          
           const span = document.createElement('span');
           span.classList.add('status', 'requested');
           span.textContent = `Requested to: ${adjustment.replacementTeacher.name} (${adjustment.replacementTeacher.email})`;

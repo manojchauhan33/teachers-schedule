@@ -9,7 +9,9 @@ const adjustmentRequestSchema = new mongoose.Schema({
     type: String, 
     enum: ['Requested', 'Accepted', 'Rejected'], 
     default: 'Requested' 
-  }
+  },
+  rejectionReason: { type: String }
+
 }, { timestamps: true });
 
 export default mongoose.model('AdjustmentRequest', adjustmentRequestSchema);

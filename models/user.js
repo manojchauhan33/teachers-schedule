@@ -6,7 +6,10 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: String,
-  profilePic: String
+  profilePic: String,
+
+  // resetPasswordToken: String,
+  // resetPasswordExpires: Date
 });
 
 

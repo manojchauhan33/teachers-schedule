@@ -3,17 +3,19 @@ import Timetable from '../models/timetable.js';
 
 async function renderAdminDashboard(req, res) {
   try {
-    const teachers = await User.find({ role: 'user' }); // teacher users
+    const teachers = await User.find({ role: 'user' }); // not teacher->itsusers
 
     const selectedTeacherId = req.query.teacherId || (teachers[0] && teachers[0]._id);
 
     let timetableData = [];
 
     // console.log(timetableData);
+    // console.log(selectedTeacherId);
 
     if (selectedTeacherId) {
       timetableData = await Timetable.find({ teacher: selectedTeacherId }).populate('subject');
     }
+
 
     res.render('admin', {
       user: req.session.user,    //render from here

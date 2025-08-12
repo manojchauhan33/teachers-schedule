@@ -10,3 +10,5 @@ router.post('/accept/:id', roleCheck('user'), acceptAdjustment);
 router.post('/reject/:id', roleCheck('user'), rejectAdjustment);
 
 export default router;
+
+

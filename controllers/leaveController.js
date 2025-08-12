@@ -29,6 +29,7 @@ const renderLeaveForm = async (req, res) => {
       }
     }
 
+    
     res.render('leave', {
       user: req.session.user,
       successMessage: null,

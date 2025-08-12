@@ -39,8 +39,9 @@ async function saveTimetable(req, res) {
       room
     });
 
-    console.log(newEntry);
+    // console.log(newEntry);
     
+
     await newEntry.save();
     res.redirect(`/admin?teacherId=${teacherId}`);
     

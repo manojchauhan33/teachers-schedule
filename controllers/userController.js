@@ -32,6 +32,8 @@ async function updateLectureStatus(req, res) {
   try {
     const { timetableId, status } = req.body;
 
+    // console.log(req.body);
+
     if (!timetableId || !status) {
       return res.status(400).json({ success: false, message: 'Missing data' });
     }

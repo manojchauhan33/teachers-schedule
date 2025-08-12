@@ -25,7 +25,9 @@
           <!-- render here -->
           <select name="teacherId" id="teacherSelect" onchange="document.getElementById('teacherForm').submit()">
             <% teachers.forEach(teacher => { %>
+              
               <option value="<%= teacher._id %>" <%= teacher._id.toString() === selectedTeacherId ? 'selected' : '' %>><%= teacher.name %> - <%= teacher.email %></option>
+
             <% }) %>
           </select>
         </form>

@@ -8,3 +8,4 @@ const router = express.Router();
 router.get('/', roleCheck('admin'), renderAdminDashboard);
 
 export default router;
+

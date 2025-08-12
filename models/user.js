@@ -8,8 +8,10 @@ const userSchema = new mongoose.Schema({
   role: String,
   profilePic: String,
 
-  // resetPasswordToken: String,
-  // resetPasswordExpires: Date
+  resetPasswordToken: { type: String, index: true },
+  resetPasswordExpire: { type: Date },
+
+  
 });
 
 

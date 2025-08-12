@@ -35,7 +35,6 @@ export const renderInboxPage = async (req, res) => {
 export const acceptAdjustment = async (req, res) => {
   try {
     const { id } = req.params;
-    // console.log(id);
 
     const adjustment = await AdjustmentRequest.findById(id)
       .populate('lecture')

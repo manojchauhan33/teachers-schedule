@@ -1,9 +1,12 @@
-// import express from 'express';
-// import { renderForgotPassword, sendResetLink } from '../controllers/forgotController.js';
+import express from 'express';
+import { renderForgotPassword, sendResetLink } from '../controllers/forgotController.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/', renderForgotPassword);
-// router.post('/', sendResetLink);
+router.get('/', renderForgotPassword);
+router.post('/', sendResetLink);
 
-// export default router;
+export default router;
+
+
+

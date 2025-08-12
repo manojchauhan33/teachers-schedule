@@ -13,7 +13,9 @@ async function renderDashboardPage(req, res) {
     const totalLeft = timetable.filter(t => t.status === 'Left').length;
 
 
-
+    // console.log(totalLectures);
+    // console.log(totalDone);
+    // console.log(totalLeft);
 
     
     res.render('dashboard', {

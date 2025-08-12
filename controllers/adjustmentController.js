@@ -1,4 +1,3 @@
-// controllers/adjustmentController.js
 import AdjustmentRequest from '../models/adjustmentRequest.js';
 import Timetable from '../models/timetable.js';
 
@@ -33,7 +32,7 @@ export const sendAdjustment = async (req, res) => {
 
     const populatedAdjustment = await AdjustmentRequest.findById(adjustment._id).populate('replacementTeacher');
 
-    console.log(`Adjustment request saved and timetable updated for Lecture ID: ${lectureId}`);
+    console.log(`adjustment request saved and timetable updated for Lecture ID: ${lectureId}`);
 
     res.status(200).json({ adjustment: populatedAdjustment });
   } catch (error) {

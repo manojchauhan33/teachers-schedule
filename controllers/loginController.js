@@ -1,4 +1,5 @@
 import User from '../models/user.js';
+import bcrypt from 'bcrypt';
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -6,9 +7,15 @@ const loginController = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user || user.password !== password) {
-      return res.send('Invalid email or password');
+    if (!user) {
+      return res.send('Invalid email');
     }
+    const isMatch = await bcrypt.compare(password, user.password); 
+
+    if (!isMatch) {
+      return res.status(400).send('Invalid Password');
+    }
+
 
     //console.log(req.body);
 
@@ -18,6 +25,7 @@ const loginController = async (req, res) => {
       role: user.role,
       profilePic: user.profilePic
     };
+    
     
 
 

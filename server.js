@@ -21,8 +21,8 @@ import approveLeaveRoutes from './routes/approveLeaveRoutes.js';
 import userDashboardRoutes from './routes/userDashboardRoutes.js';
 import calenderRoute from './routes/calenderRoute.js';
 import inboxRoute from './routes/inboxRoutes.js';
-// import forgotRoute from './routes/forgotRoute.js';
-// import resetRoutes from './routes/resetRoutes.js';
+import forgotRoute from './routes/forgotRoute.js';
+import resetRoutes from './routes/resetRoutes.js';
 
 const app = express();
 dotenv.config();
@@ -76,8 +76,10 @@ app.use('/leave', leaveRoutes);
 app.use('/approveLeave', approveLeaveRoutes);
 app.use('/celender', calenderRoute);
 app.use('/inbox',inboxRoute);
-// app.use('/forgot',forgotRoute);
-// app.use('/', resetRoutes);
+app.use('/forgot',forgotRoute);
+app.use('/', resetRoutes);
+
+
 
 
 

@@ -12,3 +12,4 @@ router.post('/', roleCheck('admin'), saveTimetable);
 router.post('/delete', roleCheck('admin'), deleteLecture);
 
 export default router;
+
